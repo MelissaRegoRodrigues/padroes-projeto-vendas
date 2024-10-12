@@ -5,14 +5,14 @@ import api.patterns.observermediator.impl.ObserverCompra;
 import api.patterns.observermediator.impl.ScheduledChangeManager;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         var scheduler = Executors.newScheduledThreadPool(5);
         var taskPool = Executors.newFixedThreadPool(5);
         var changeManager = new ScheduledChangeManager(scheduler, taskPool);
-        changeManager.iniciar();
-
+        changeManager.iniciar(10L, 10L, TimeUnit.SECONDS);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Encerrando...");
             changeManager.close();

@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChangeManagerImpl implements ChangeManager {
+/**
+ * {@link ChangeManager} mais simples que envia todas as notificações que recebe imediatamente
+ */
+public class SimpleChangeManager implements ChangeManager {
 
     private final Map<Subject<?>, List<Observer<?>>> mapping = new HashMap<>();
 
