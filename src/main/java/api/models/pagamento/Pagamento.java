@@ -1,6 +1,5 @@
 package api.models.pagamento;
 
-import api.models.pagamento.enums.TipoPagamento;
 
 
 public class Pagamento {

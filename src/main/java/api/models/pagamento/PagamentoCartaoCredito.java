@@ -1,6 +1,5 @@
 package api.models.pagamento;
 
-import api.models.pagamento.enums.TipoPagamento;
 import api.models.pagamento.instituicoes.BancoBrasil;
 import api.models.pagamento.instituicoes.StatusPagamento;
 import api.patterns.pagamento.COR.PagamentoHandler;

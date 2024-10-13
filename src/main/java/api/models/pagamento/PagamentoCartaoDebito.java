@@ -1,6 +1,5 @@
 package api.models.pagamento;
 
-import api.models.pagamento.enums.TipoPagamento;
 import api.patterns.pagamento.COR.PagamentoHandler;
 
 public class PagamentoCartaoDebito extends PagamentoHandler {
