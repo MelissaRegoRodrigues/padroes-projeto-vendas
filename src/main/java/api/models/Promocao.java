@@ -8,8 +8,17 @@ public class Promocao {
     private LocalDateTime tempoInicio;
     private LocalDateTime tempoFim;
 
+    public Promocao(double desconto, Produto produto,
+                    LocalDateTime tempoInicio, LocalDateTime tempoFim ) {
+        this.desconto = desconto;
+        this.produto = produto;
+        this.tempoInicio = tempoInicio;
+        this.tempoFim = tempoFim;
+    }
+
     public void aplicarDesconto() {}
     public void retirarDesconto() {}
+
     public LocalDateTime calcularDuracao(){
         return null;
     }

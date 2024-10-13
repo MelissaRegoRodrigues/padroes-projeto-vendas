@@ -10,10 +10,28 @@ public class Produto {
     private String descricao;
     private int quantidade;
     private BigDecimal preco;
-    private Enum<Estoque> status;
+    private Estoque status;
     private LocalDate validade;
     private Promocao promocao;
     private Cupom cupomValido;
+
+
+    // se nao tiver promoçao ou cupom é passar os campos como null
+    // nao aplica o builder pq só tem tipo 2 parametros opcionais, n vale a pena
+    public Produto (String codigo, String nome, String descricao, int quantidade,
+                    BigDecimal preco, Estoque status, LocalDate validade,
+                    Promocao promocao, Cupom cupomValido) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.quantidade = quantidade;
+        this.preco = preco;
+        this.status = status;
+        this.validade = validade;
+        this.promocao = promocao;
+        this.cupomValido = cupomValido;
+    }
+
 
     public void aplicarDesconto() {}
 
@@ -63,7 +81,7 @@ public class Produto {
         return status;
     }
 
-    public void setStatus(Enum<Estoque> status) {
+    public void setStatus(Estoque status) {
         this.status = status;
     }
 
