@@ -7,13 +7,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Promocao {
+    private Integer promocaoId;
     private double desconto;
     private Produto produto;
     private LocalDateTime tempoInicio;
     private LocalDateTime tempoFim;
 
-    public Promocao(double desconto, Produto produto,
+    public Promocao(Integer promocaoId, double desconto, Produto produto,
                     LocalDateTime tempoInicio, LocalDateTime tempoFim ) {
+        this.promocaoId = promocaoId;
         this.desconto = desconto;
         this.produto = produto;
         this.tempoInicio = tempoInicio;
@@ -36,6 +38,14 @@ public class Promocao {
         }else{
             throw new PromocaoInativaException();
         }
+    }
+
+    public Integer getPromocaoId() {
+        return promocaoId;
+    }
+
+    public void setPromocaoId(Integer promocaoId) {
+        this.promocaoId = promocaoId;
     }
 
     public double getDesconto() {
