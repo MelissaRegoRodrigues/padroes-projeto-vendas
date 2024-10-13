@@ -18,7 +18,7 @@ public abstract class PagamentoHandler {
 
     protected boolean checarProximo(Pagamento pagamento) {
         if (proximo == null) {
-            System.out.println("Não foi possivel processar sua requisição para o tipo de pagamento: " + pagamento.getTipo());
+            System.out.println("Não foi possivel processar sua requisição para este tipo de pagamento");
             return false;
         }
         return proximo.processar(pagamento);

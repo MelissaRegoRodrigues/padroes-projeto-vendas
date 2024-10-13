@@ -6,7 +6,7 @@ import api.patterns.pagamento.COR.PagamentoHandler;
 public class PagamentoCartaoCredito extends PagamentoHandler {
     @Override
     public boolean processar(Pagamento pagamento) {
-        if (pagamento.getTipo() == TipoPagamento.CARTAO_CREDITO) {
+        if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
             System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais.");
             return true;
         }

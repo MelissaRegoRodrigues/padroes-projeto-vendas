@@ -16,9 +16,6 @@ public class EstrategiaPagamentoPix implements EstrategiaPagamento{
             Scanner scanner = new Scanner(System.in);
 
             System.out.println("Valor a ser pago: R$ " + pagamento.getValor());
-
-            String qrCode = "QRCodeGerado123";
-            System.out.println("QR Code gerado: " + qrCode);
         }
     }
 }
