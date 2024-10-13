@@ -1,7 +1,6 @@
 package api.models;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class Produto {
 
@@ -11,7 +10,6 @@ public class Produto {
     private int quantidade;
     private BigDecimal preco;
     private Estoque status;
-    private LocalDate validade;
     private Promocao promocao;
 
 
@@ -19,7 +17,7 @@ public class Produto {
     // se nao tiver promoçao é passar o campo como null
     // nao aplica o builder pq só tem mt pouco parametro opcional, n vale a pena
     public Produto (String codigo, String nome, String descricao, int quantidade,
-                    BigDecimal preco, Estoque status, LocalDate validade,
+                    BigDecimal preco, Estoque status,
                     Promocao promocao) {
         this.codigo = codigo;
         this.nome = nome;
@@ -27,12 +25,21 @@ public class Produto {
         this.quantidade = quantidade;
         this.preco = preco;
         this.status = status;
-        this.validade = validade;
         this.promocao = promocao;
     }
 
 
-    public void aplicarDesconto() {}
+
+    public BigDecimal calcularPreco() {
+        if (promocao.validar()){
+            BigDecimal precoOrigem = this.preco;
+            BigDecimal valorDesconto = precoOrigem.multiply(BigDecimal.valueOf(promocao.getDesconto()/100));
+            BigDecimal precoNovo = precoOrigem.subtract(valorDesconto);
+            return precoNovo;
+        }else {
+            return preco;
+        }
+    }
 
 
     public String getCodigo() {
@@ -81,14 +88,6 @@ public class Produto {
 
     public void setStatus(Estoque status) {
         this.status = status;
-    }
-
-    public LocalDate getValidade() {
-        return validade;
-    }
-
-    public void setValidade(LocalDate validade) {
-        this.validade = validade;
     }
 
     public Promocao getPromocao() {

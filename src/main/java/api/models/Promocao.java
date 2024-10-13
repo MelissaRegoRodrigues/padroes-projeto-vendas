@@ -1,5 +1,9 @@
 package api.models;
 
+import api.exceptions.PromocaoInativaException;
+import api.exceptions.PromocaoInvalidaException;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Promocao {
@@ -16,11 +20,22 @@ public class Promocao {
         this.tempoFim = tempoFim;
     }
 
-    public void aplicarDesconto() {}
-    public void retirarDesconto() {}
+    //vai ta validando a promocao para conseguir dale no produto
+    public Boolean validar() {
 
-    public LocalDateTime calcularDuracao(){
-        return null;
+        LocalDateTime dataAtual = LocalDateTime.now();
+
+        if (dataAtual.isAfter(tempoInicio) && dataAtual.isBefore(tempoFim)) {
+            BigDecimal precoOrigem = produto.getPreco();
+
+            if (this.desconto >= 100) {
+                throw new PromocaoInvalidaException();
+            }
+
+            return true;
+        }else{
+            throw new PromocaoInativaException();
+        }
     }
 
     public double getDesconto() {
