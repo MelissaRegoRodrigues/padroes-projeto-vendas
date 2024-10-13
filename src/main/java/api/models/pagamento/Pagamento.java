@@ -6,10 +6,12 @@ import java.math.BigDecimal;
 
 public class Pagamento {
     private TipoPagamento tipo;
-    private BigDecimal valor;
+    private DadosPagamento dadosPagamento;
+    private Double valor;
 
-    public Pagamento(TipoPagamento tipo, BigDecimal valor) {
+    public Pagamento(TipoPagamento tipo, DadosPagamento dadosPagamento, Double valor) {
         this.tipo = tipo;
+        this.dadosPagamento = dadosPagamento;
         this.valor = valor;
     }
 
@@ -17,9 +19,11 @@ public class Pagamento {
         return tipo;
     }
 
-
-    public BigDecimal getValor() {
-        return valor;
+    public DadosPagamento getDadosPagamento() {
+        return dadosPagamento;
     }
 
+    public Double getValor() {
+        return valor;
+    }
 }
