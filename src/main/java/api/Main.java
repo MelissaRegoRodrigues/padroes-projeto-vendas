@@ -1,34 +1,58 @@
 package api;
 
 import api.models.pagamento.*;
-
-import api.models.pagamento.enums.TipoPagamento;
 import api.patterns.pagamento.COR.PagamentoHandler;
 
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+//        PagamentoHandler handlers = PagamentoHandler.encadear(new PagamentoCartaoDebito(), new PagamentoPix());
+        String opcao;
+        boolean continuar = true;
+        System.out.println("Bem-vindo à nossa loja!");
 
-        PagamentoHandler handlers = PagamentoHandler.encadear( new PagamentoCartaoDebito(), new PagamentoPix());
+        do {
+            System.out.println("Você é:");
+            System.out.println("1 - Cliente");
+            System.out.println("2 - Administrador");
+            System.out.println("Digite 'sair' para encerrar.");
 
-        Pagamento pagamentoCredito = new Pagamento(TipoPagamento.CARTAO_CREDITO,
-                new DadosCartaoCredito(
-                        "12345678910111213141516", "123", 5
-                ), 100.00);
+            opcao = sc.nextLine().toLowerCase().trim();
 
-        Pagamento pagamentoDebito = new Pagamento(TipoPagamento.CARTAO_DEBITO,
-                new DadosCartaoCredito(
-                        "12345678910111213141516", "123", 2
-                ), 50.00);
+            switch (opcao) {
+                case "1":
+                    System.out.println("Você escolheu Cliente.");
+                    mostrarMenuCliente();
+                    continuar = false;
+                    break;
+                case "2":
+                    System.out.println("Você escolheu Administrador.");
+                    mostrarMenuAdministrador();
+                    continuar = false;
+                    break;
+                case "sair":
+                    System.out.println("Saindo do sistema...");
+                    continuar = false;
+                    break;
+                default:
+                    System.out.println("Opção desconhecida, escolha uma opção entre 1, 2 ou 'sair'.");
+            }
 
-        Pagamento pagamentoPix = new Pagamento(TipoPagamento.PIX, new DadosPix("123"), 370.41);
+            System.out.println();
 
-        System.out.println("----------- 1 Teste -----------");
-        handlers.processar(pagamentoCredito);
-        System.out.println("----------- 2 Teste -----------");
-        handlers.processar(pagamentoDebito);
-        System.out.println("----------- 3 Teste -----------");
-        handlers.processar(pagamentoPix);
+        } while (continuar);
 
+        sc.close();
+    }
+
+
+    public static void mostrarMenuCliente() {
+        System.out.println("Menu do Cliente (a ser implementado)...");
+    }
+
+    public static void mostrarMenuAdministrador() {
+        System.out.println("Menu do Administrador (a ser implementado)...");
     }
 }
