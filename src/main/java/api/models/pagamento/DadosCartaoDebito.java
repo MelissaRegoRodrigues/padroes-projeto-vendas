@@ -1,17 +1,16 @@
 package api.models.pagamento;
 
-public class DadosCartaoCredito implements DadosPagamento{
+public class DadosCartaoDebito implements DadosPagamento{
     private String numeroCartao;
     private String codigoSeguranca;
-    private int quantidadeParcelas;
+    private final int quantidadeParcelas = 1;
 
-    public DadosCartaoCredito() {
+    public DadosCartaoDebito() {
     }
 
-    public DadosCartaoCredito(String numeroCartao, String codigoSeguranca, int quantidadeParcelas) {
+    public DadosCartaoDebito(String numeroCartao, String codigoSeguranca) {
         this.numeroCartao = numeroCartao;
         this.codigoSeguranca = codigoSeguranca;
-        this.quantidadeParcelas = quantidadeParcelas;
     }
 
     @Override
@@ -22,9 +21,7 @@ public class DadosCartaoCredito implements DadosPagamento{
         if (!codigoSeguranca.matches("\\d{3}")) {
             throw new Exception("Código de segurança inválido!");
         }
-        if (quantidadeParcelas < 0) {
-            throw new Exception("Quantidade de parcelas deve ser maior que zero!");
-        }
+
     }
 
 
@@ -50,8 +47,5 @@ public class DadosCartaoCredito implements DadosPagamento{
         this.numeroCartao = numeroCartao;
     }
 
-    public void setQuantidadeParcelas(int quantidadeParcelas) {
-        this.quantidadeParcelas = quantidadeParcelas;
-    }
 
 }

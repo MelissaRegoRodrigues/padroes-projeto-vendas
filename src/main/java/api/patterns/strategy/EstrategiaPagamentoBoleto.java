@@ -15,7 +15,6 @@ public class EstrategiaPagamentoBoleto implements EstrategiaPagamento{
         if (pagamento.getDadosPagamento() instanceof DadosBoleto dados) {
             String linkBoleto = "https://boletobancario/" + Math.random();
             System.out.println("Link para geração do Boleto: " + linkBoleto);
-
         }
     }
 }

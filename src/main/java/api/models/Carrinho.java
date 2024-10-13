@@ -1,43 +1,41 @@
 package api.models;
 
-import api.exceptions.CarrinhoVazioException;
-import api.exceptions.TotalInvalidoException;
-
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Carrinho {
-    private List<Produto> produtos;
 
-    public Carrinho(List<Produto> produtos) {
-        this.produtos = produtos;
+    private Map<Produto, Integer> produtos;  // Alterado para mapear produto e sua quantidade
+
+    public Carrinho() {
+        this.produtos = new HashMap<>();
     }
 
-    public Carrinho adicionarProduto(Produto produto){
-        this.produtos.add(produto);
-        return this;
+    public void adicionarProduto(Produto produto, int quantidade) {
+        produtos.put(produto, produtos.getOrDefault(produto, 0) + quantidade);
     }
 
-    public Carrinho removerProduto(Produto produto){
-        this.produtos.remove(produto);
-        return this;
+    public void removerProduto(Produto produto, int quantidade) {
+        if (produtos.containsKey(produto)) {
+            int qtdAtual = produtos.get(produto);
+            if (qtdAtual <= quantidade) {
+                produtos.remove(produto);
+            } else {
+                produtos.put(produto, qtdAtual - quantidade);
+            }
+        }
     }
-    public BigDecimal calcularPreco(){
 
-        if (produtos.isEmpty()) {
-            throw new CarrinhoVazioException();
+    public Map<Produto, Integer> getProdutos() {
+        return produtos;
+    }
+
+    public BigDecimal calcularPreco() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Map.Entry<Produto, Integer> entry : produtos.entrySet()) {
+            total = total.add(entry.getKey().getPreco().multiply(BigDecimal.valueOf(entry.getValue())));
         }
-
-        BigDecimal precoTotal = BigDecimal.ZERO;
-
-        for(Produto produto : produtos){
-            precoTotal = precoTotal.add(produto.getPreco());
-        }
-
-        if ((precoTotal.compareTo(BigDecimal.ZERO) <= 0)){
-            throw new TotalInvalidoException();
-        }
-
-        return precoTotal;
+        return total;
     }
 }

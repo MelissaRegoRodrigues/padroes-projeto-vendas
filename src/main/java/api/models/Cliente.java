@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.util.UUID;
 
 public class Cliente {
-    private long id;
+    private Integer id;
     private String nomeCompleto;
     private String telefoneContato;
     private String email;
@@ -44,6 +44,30 @@ public class Cliente {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
         return cliente;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getNomeCompleto() {
+        return nomeCompleto;
+    }
+
+    public String getTelefoneContato() {
+        return telefoneContato;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getCEP() {
+        return CEP;
+    }
+
+    public int getNumero() {
+        return numero;
     }
 
     @Override

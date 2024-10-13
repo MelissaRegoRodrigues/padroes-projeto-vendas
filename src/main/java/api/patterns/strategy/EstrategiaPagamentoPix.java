@@ -13,7 +13,6 @@ public class EstrategiaPagamentoPix implements EstrategiaPagamento{
             String codigoAleatorio = RandomStringUtils.randomAlphanumeric(10).toUpperCase();
             dados.setChavePix(codigoAleatorio);
             System.out.println("QR Code para chave Pix: " + dados.getChavePix());
-            Scanner scanner = new Scanner(System.in);
 
             System.out.println("Valor a ser pago: R$ " + pagamento.getValor());
         }
