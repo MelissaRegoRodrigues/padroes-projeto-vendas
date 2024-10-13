@@ -213,7 +213,6 @@ public class Main {
             default:
                 System.out.println("Método inválido");
         }
-
         handlers.processar(pagamento);
     }
 
