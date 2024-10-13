@@ -9,7 +9,14 @@ public class ContextoEstrategiaPagamento {
         this.estrategiaPagamento = estrategiaPagamento;
     }
 
-    public void executarEstrategiaPagamento(EstrategiaPagamento estrategiaPagamento, Pagamento pagamento){
+    public void executarEstrategiaPagamento(Pagamento pagamento) {
+        if (estrategiaPagamento == null) {
+            throw new NullPointerException("tipo de pagamento não definido (null)");
+        }
         estrategiaPagamento.processarPagamento(pagamento);
+    }
+
+    public EstrategiaPagamento getEstrategiaPagamento() {
+        return estrategiaPagamento;
     }
 }

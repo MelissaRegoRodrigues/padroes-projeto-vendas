@@ -2,6 +2,6 @@ package api.patterns.strategy;
 
 import api.models.pagamento.Pagamento;
 
-interface EstrategiaPagamento {
+public interface EstrategiaPagamento {
     void processarPagamento(Pagamento pagamento);
 }

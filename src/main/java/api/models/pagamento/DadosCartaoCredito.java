@@ -2,13 +2,11 @@ package api.models.pagamento;
 
 public class DadosCartaoCredito implements DadosPagamento{
     private String numeroCartao;
-    private String validade;
     private String codigoSeguranca;
     private int quantidadeParcelas;
 
-    public DadosCartaoCredito(String numeroCartao, String validade, String codigoSeguranca, int quantidadeParcelas) {
+    public DadosCartaoCredito(String numeroCartao, String codigoSeguranca, int quantidadeParcelas) {
         this.numeroCartao = numeroCartao;
-        this.validade = validade;
         this.codigoSeguranca = codigoSeguranca;
         this.quantidadeParcelas = quantidadeParcelas;
     }
@@ -19,17 +17,20 @@ public class DadosCartaoCredito implements DadosPagamento{
         if (!numeroCartao.matches("\\d{16}")) {
             throw new Exception("Número do cartão de crédito inválido!");
         }
-        if (!validade.matches("\\d{2}/\\d{2}")) {
-            throw new Exception("Data de validade inválida!");
-        }
         if (!codigoSeguranca.matches("\\d{3}")) {
             throw new Exception("Código de segurança inválido!");
         }
+        if (quantidadeParcelas < 0) {
+            throw new Exception("Quantidade de parcelas deve ser maior que zero!");
+        }
     }
+
 
     public String getNumeroCartao() {
         return numeroCartao;
     }
+
+
 
     public String getCodigoSeguranca() {
         return codigoSeguranca;
@@ -38,4 +39,17 @@ public class DadosCartaoCredito implements DadosPagamento{
     public int getQuantidadeParcelas() {
         return quantidadeParcelas;
     }
+
+    public void setCodigoSeguranca(String codigoSeguranca) {
+        this.codigoSeguranca = codigoSeguranca;
+    }
+
+    public void setNumeroCartao(String numeroCartao) {
+        this.numeroCartao = numeroCartao;
+    }
+
+    public void setQuantidadeParcelas(int quantidadeParcelas) {
+        this.quantidadeParcelas = quantidadeParcelas;
+    }
+
 }
