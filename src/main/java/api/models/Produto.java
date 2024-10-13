@@ -13,14 +13,14 @@ public class Produto {
     private Estoque status;
     private LocalDate validade;
     private Promocao promocao;
-    private Cupom cupomValido;
 
 
-    // se nao tiver promoçao ou cupom é passar os campos como null
-    // nao aplica o builder pq só tem tipo 2 parametros opcionais, n vale a pena
+
+    // se nao tiver promoçao é passar o campo como null
+    // nao aplica o builder pq só tem mt pouco parametro opcional, n vale a pena
     public Produto (String codigo, String nome, String descricao, int quantidade,
                     BigDecimal preco, Estoque status, LocalDate validade,
-                    Promocao promocao, Cupom cupomValido) {
+                    Promocao promocao) {
         this.codigo = codigo;
         this.nome = nome;
         this.descricao = descricao;
@@ -29,13 +29,11 @@ public class Produto {
         this.status = status;
         this.validade = validade;
         this.promocao = promocao;
-        this.cupomValido = cupomValido;
     }
 
 
     public void aplicarDesconto() {}
 
-    public void associarCupom() {}
 
     public String getCodigo() {
         return codigo;
@@ -77,7 +75,7 @@ public class Produto {
         this.preco = preco;
     }
 
-    public Enum<Estoque> getStatus() {
+    public Estoque getStatus() {
         return status;
     }
 
@@ -101,11 +99,4 @@ public class Produto {
         this.promocao = promocao;
     }
 
-    public Cupom getCupomValido() {
-        return cupomValido;
-    }
-
-    public void setCupomValido(Cupom cupomValido) {
-        this.cupomValido = cupomValido;
-    }
 }
