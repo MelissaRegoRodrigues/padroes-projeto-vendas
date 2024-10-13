@@ -3,7 +3,7 @@ package api.models.pagamento;
 public class DadosPix implements DadosPagamento{
     private String chavePix;
 
-    public DadosPix(String chavePix, double valor) {
+    public DadosPix(String chavePix) {
         this.chavePix = chavePix;
     }
 
