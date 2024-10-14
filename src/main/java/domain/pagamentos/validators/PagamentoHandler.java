@@ -1,9 +1,12 @@
 package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
+import infrastructure.apis.banco.BancoAPI;
+import infrastructure.apis.banco.BancoBrasilAPI;
 
 public abstract class PagamentoHandler {
     private PagamentoHandler proximo;
+    private BancoAPI bancoAPI;
 
     public static PagamentoHandler encadear(PagamentoHandler primeiro, PagamentoHandler... cadeia) {
         PagamentoHandler cabeca = primeiro;

@@ -2,8 +2,10 @@ package domain.pagamentos.services;
 
 import domain.pagamentos.services.strategies.EstrategiaPagamento;
 
+import java.math.BigDecimal;
+
 public interface PagamentoService {
 
-    void pagar(EstrategiaPagamento estrategiaPagamento);
+    void pagar(BigDecimal valor);
 
 }

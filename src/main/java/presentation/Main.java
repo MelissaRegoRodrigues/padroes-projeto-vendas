@@ -1,17 +1,8 @@
 package presentation;
 
-import domain.pagamentos.validators.PagamentoCartaoCreditoHandler;
-import domain.pagamentos.validators.PagamentoCartaoDebitoHandler;
-import domain.pagamentos.validators.PagamentoHandler;
-import domain.pagamentos.services.strategies.ContextoEstrategiaPagamento;
-import domain.pagamentos.services.strategies.EstrategiaPagamentoCartaoCredito;
-import domain.pagamentos.services.strategies.EstrategiaPagamentoCartaoDebito;
-import domain.pagamentos.services.strategies.EstrategiaPagamentoPix;
-import domain.pagamentos.models.Pagamento;
-import domain.pagamentos.validators.PagamentoPixHandler;
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
-import infrastructure.apis.bandeiras.BancoBrasilBandeiraAPI;
+import infrastructure.apis.banco.BancoBrasilBandeiraAPI;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,10 +16,6 @@ public class Main {
     private static Carrinho carrinho = new Carrinho();
 
     // TODO Mudei para injear a API das bandeiras, mas provavelmente cada handler lidará com as bandeiras
-    private static PagamentoHandler handlers = PagamentoHandler.encadear(
-        new PagamentoCartaoCreditoHandler(new BancoBrasilBandeiraAPI()),
-        new PagamentoCartaoDebitoHandler(new BancoBrasilBandeiraAPI()),
-        new PagamentoPixHandler());
 
     public static void main(String[] args) {
         popularProdutos();
@@ -196,34 +183,9 @@ public class Main {
     private static void comprarProdutos(Scanner sc) {
         System.out.println("Resumo da compra:");
         verCarrinho();
-        System.out.println("Escolha a forma de pagamento:");
-        System.out.println("1 - Cartão de Crédito");
-        System.out.println("2 - Cartão de Débito");
-        System.out.println("3 - Pix");
 
-        String opcaoPagamento = sc.nextLine().trim();
-        ContextoEstrategiaPagamento estrategiaPagamento = new ContextoEstrategiaPagamento();
         BigDecimal total = carrinho.calcularPreco();
-        Pagamento pagamento = new Pagamento(total.doubleValue());
 
-        switch (opcaoPagamento) {
-            case "1":
-                estrategiaPagamento.setEstrategiaPagamento(new EstrategiaPagamentoCartaoCredito());
-                estrategiaPagamento.executarEstrategiaPagamento(pagamento);
-                break;
-            case "2":
-                estrategiaPagamento.setEstrategiaPagamento(new EstrategiaPagamentoCartaoDebito());
-                estrategiaPagamento.executarEstrategiaPagamento(pagamento);
-                break;
-
-            case "3":
-                estrategiaPagamento.setEstrategiaPagamento(new EstrategiaPagamentoPix());
-                estrategiaPagamento.executarEstrategiaPagamento(pagamento);
-                break;
-            default:
-                System.out.println("Método inválido");
-        }
-        handlers.processar(pagamento);
     }
 
     private static void popularProdutos() {

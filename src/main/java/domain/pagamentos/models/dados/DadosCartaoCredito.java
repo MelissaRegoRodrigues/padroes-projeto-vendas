@@ -1,5 +1,6 @@
 package domain.pagamentos.models.dados;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class DadosCartaoCredito implements DadosPagamento {

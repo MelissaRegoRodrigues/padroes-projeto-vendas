@@ -1,18 +1,18 @@
 package domain.pagamentos.validators;
 
-import infrastructure.apis.bandeiras.BandeiraAPI;
-import infrastructure.apis.bandeiras.StatusPagamento;
+import infrastructure.apis.banco.BancoAPI;
+import infrastructure.apis.banco.StatusPagamento;
 import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosCartaoCredito;
 import infrastructure.utils.TeatroUtils;
 
 public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
 
-    private BandeiraAPI bandeiraAPI;
+    private BancoAPI bandeiraAPI;
 
     /* TODO provavelmente cada bandeira se tornará um handler, mas mudei apenas pra não dar
      * problema na hora de compilar*/
-    public PagamentoCartaoCreditoHandler(BandeiraAPI bandeiraAPI) {
+    public PagamentoCartaoCreditoHandler() {
         this.bandeiraAPI = bandeiraAPI;
     }
 

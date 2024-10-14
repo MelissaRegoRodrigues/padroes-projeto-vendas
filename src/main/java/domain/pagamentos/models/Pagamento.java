@@ -3,25 +3,22 @@ package domain.pagamentos.models;
 
 import domain.pagamentos.models.dados.DadosPagamento;
 
+import java.math.BigDecimal;
+
 public class Pagamento {
 
-    private Integer id;
     private DadosPagamento dadosPagamento;
-    private Double valor;
+    private BigDecimal valor;
 
-    public Pagamento(Double valor) {
+    public Pagamento(BigDecimal valor) {
         this.valor = valor;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public DadosPagamento getDadosPagamento() {
         return dadosPagamento;
     }
 
-    public Double getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 

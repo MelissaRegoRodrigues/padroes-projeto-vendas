@@ -1,15 +1,14 @@
 package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
-import domain.pagamentos.models.dados.DadosCartaoCredito;
 import domain.pagamentos.models.dados.DadosCartaoDebito;
-import infrastructure.apis.bandeiras.BandeiraAPI;
+import infrastructure.apis.banco.BancoAPI;
 
 public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
 
-    BandeiraAPI bandeiraAPI;
+    BancoAPI bandeiraAPI;
 
-    public PagamentoCartaoDebitoHandler(BandeiraAPI bandeiraAPI) {
+    public PagamentoCartaoDebitoHandler() {
         this.bandeiraAPI = bandeiraAPI;
     }
 

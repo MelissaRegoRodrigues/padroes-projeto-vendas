@@ -15,6 +15,7 @@ public class PagamentoBoletoHandler extends PagamentoHandler {
             System.out.println("Processando o pagamento com boleto no valor de " + pagamento.getValor() + " reais.");
             return true;
         }
+
         return checarProximo(pagamento);
     }
 
