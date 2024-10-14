@@ -10,12 +10,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PagamentoServiceImpl implements PagamentoService {
+public class ProdutoServiceImpl implements ProdutoService {
 
     private ProdutoDAO produtoDAO;
     private List<Produto> carrinho;
 
-    public PagamentoServiceImpl(Connection connection) {
+    public ProdutoServiceImpl(Connection connection) {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
         this.carrinho = new ArrayList<>(); // Inicializa o carrinho como uma lista vazia
     }
