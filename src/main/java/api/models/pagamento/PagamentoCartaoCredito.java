@@ -3,7 +3,8 @@ package api.models.pagamento;
 import api.models.pagamento.instituicoes.BancoBrasil;
 import api.models.pagamento.instituicoes.StatusPagamento;
 import api.patterns.pagamento.COR.PagamentoHandler;
-import api.utils.TeatroUtils;
+import infrastructure.utils.TeatroUtils;
+
 
 public class PagamentoCartaoCredito extends PagamentoHandler {
 

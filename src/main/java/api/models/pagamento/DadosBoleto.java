@@ -1,7 +1,5 @@
 package api.models.pagamento;
 
-import api.models.Cliente;
-
 import java.time.LocalDateTime;
 
 

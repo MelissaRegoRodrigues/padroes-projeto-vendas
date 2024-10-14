@@ -1,11 +1,13 @@
+import api.models.Carrinho;
+import api.models.Produto;
+
 import api.models.pagamento.*;
 import api.patterns.pagamento.COR.PagamentoHandler;
 import api.patterns.strategy.ContextoEstrategiaPagamento;
 import api.patterns.strategy.EstrategiaPagamentoCartaoCredito;
 import api.patterns.strategy.EstrategiaPagamentoCartaoDebito;
 import api.patterns.strategy.EstrategiaPagamentoPix;
-import domain.produtos.models.Carrinho;
-import domain.produtos.models.Produto;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
