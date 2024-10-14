@@ -1,8 +1,8 @@
-package api.patterns.observermediator.impl;
+package infrastructure.notifications.impl;
 
-import api.patterns.observermediator.abstraction.ChangeManager;
-import api.patterns.observermediator.abstraction.Observer;
-import api.patterns.observermediator.abstraction.Subject;
+import infrastructure.notifications.changemanagers.ChangeManager;
+import infrastructure.notifications.Observer;
+import infrastructure.notifications.Subject;
 
 public class CompraService implements Subject<CompraInfo> {
 

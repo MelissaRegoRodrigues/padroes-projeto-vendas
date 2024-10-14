@@ -1,7 +1,7 @@
-package api.dao;
+package api.database.dao;
 
-import api.models.Promocao;
-import api.models.Produto;
+import domain.produtos.models.Promocao;
+import domain.produtos.models.Produto;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,9 +19,9 @@ public class PromocaoDAO {
     public void adicionarPromocao(Promocao promocao) throws SQLException {
         String sql = "INSERT INTO promocao (promocaoId, desconto, produto_codigo, tempoInicio, tempoFim) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, promocao.getPromocaoId());
+            pstmt.setInt(1, promocao.getId());
             pstmt.setDouble(2, promocao.getDesconto());
-            pstmt.setInt(3, promocao.getProduto().getCodigo());
+            pstmt.setInt(3, promocao.getProduto().getId());
             pstmt.setTimestamp(4, Timestamp.valueOf(promocao.getTempoInicio()));
             pstmt.setTimestamp(5, Timestamp.valueOf(promocao.getTempoFim()));
             pstmt.executeUpdate();
@@ -75,10 +75,10 @@ public class PromocaoDAO {
         String sql = "UPDATE promocao SET desconto = ?, produto_codigo = ?, tempoInicio = ?, tempoFim = ? WHERE promocaoId = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setDouble(1, promocao.getDesconto());
-            pstmt.setInt(2, promocao.getProduto().getCodigo());
+            pstmt.setInt(2, promocao.getProduto().getId());
             pstmt.setTimestamp(3, Timestamp.valueOf(promocao.getTempoInicio()));
             pstmt.setTimestamp(4, Timestamp.valueOf(promocao.getTempoFim()));
-            pstmt.setInt(5, promocao.getPromocaoId());
+            pstmt.setInt(5, promocao.getId());
             pstmt.executeUpdate();
         }
     }

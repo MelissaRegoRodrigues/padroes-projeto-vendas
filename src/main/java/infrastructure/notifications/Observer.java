@@ -1,4 +1,4 @@
-package api.patterns.observermediator.abstraction;
+package infrastructure.notifications;
 
 /**
  * Responsável por receber notificações realizadas por subjects que os interessem

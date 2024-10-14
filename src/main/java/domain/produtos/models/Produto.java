@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class Produto {
 
-    private Integer codigo;
+    private Integer id;
     private String nome;
     private String descricao;
     private int quantidade;
@@ -16,10 +16,10 @@ public class Produto {
 
     // se nao tiver promoçao é passar o campo como null
     // nao aplica o builder pq só tem mt pouco parametro opcional, n vale a pena
-    public Produto (Integer codigo, String nome, String descricao, int quantidade,
+    public Produto (Integer id, String nome, String descricao, int quantidade,
                     BigDecimal preco, Estoque status,
                     Promocao promocao) {
-        this.codigo = codigo;
+        this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.quantidade = quantidade;
@@ -42,12 +42,12 @@ public class Produto {
     }
 
 
-    public Integer getCodigo() {
-        return codigo;
+    public Integer getId() {
+        return id;
     }
 
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {

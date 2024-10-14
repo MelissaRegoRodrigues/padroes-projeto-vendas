@@ -1,4 +1,4 @@
-package api.utils;
+package infrastructure.utils;
 
 public class TeatroUtils {
 

@@ -1,4 +1,4 @@
-package api.patterns.observermediator.abstraction;
+package infrastructure.notifications;
 
 /**
  * Subject que será observado pelos observers e os notificará caso ocorra algum evento deste subject

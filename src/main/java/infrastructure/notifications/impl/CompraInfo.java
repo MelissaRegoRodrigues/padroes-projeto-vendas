@@ -1,4 +1,4 @@
-package api.patterns.observermediator.impl;
+package infrastructure.notifications.impl;
 
 public record CompraInfo(String nome, double preco) {
 }

@@ -1,6 +1,6 @@
-package api.patterns.observermediator.impl;
+package infrastructure.notifications.impl;
 
-import api.patterns.observermediator.abstraction.Observer;
+import infrastructure.notifications.Observer;
 
 public class ObserverCompra implements Observer<CompraInfo> {
 
