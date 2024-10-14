@@ -1,4 +1,4 @@
-package api.models;
+package domain.produtos.models;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

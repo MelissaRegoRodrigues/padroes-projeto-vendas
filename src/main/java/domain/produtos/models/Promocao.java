@@ -1,7 +1,7 @@
-package api.models;
+package domain.produtos.models;
 
-import api.exceptions.PromocaoInativaException;
-import api.exceptions.PromocaoInvalidaException;
+import domain.pagamentos.exceptions.PromocaoInativaException;
+import domain.pagamentos.exceptions.PromocaoInvalidaException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,6 +1,7 @@
-package api.models.pagamento;
+package domain.pagamentos.models.dados;
 
-public class DadosPix implements DadosPagamento{
+public class DadosPix implements DadosPagamento {
+
     private String chavePix;
 
     public DadosPix() {

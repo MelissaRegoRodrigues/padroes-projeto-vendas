@@ -1,8 +1,10 @@
-package api.models.pagamento;
+package domain.pagamentos.models;
 
 
+import domain.pagamentos.models.dados.DadosPagamento;
 
 public class Pagamento {
+
     private Integer id;
     private DadosPagamento dadosPagamento;
     private Double valor;

@@ -1,12 +1,7 @@
-package api.patterns.strategy;
+package domain.pagamentos.services.strategies;
 
-import api.models.Cliente;
-import api.models.pagamento.DadosBoleto;
-import api.models.pagamento.Pagamento;
-
-import java.util.Scanner;
-
-import static api.models.Cliente.buscarClientePorNome;
+import domain.pagamentos.models.dados.DadosBoleto;
+import domain.pagamentos.models.Pagamento;
 
 public class EstrategiaPagamentoBoleto implements EstrategiaPagamento{
 

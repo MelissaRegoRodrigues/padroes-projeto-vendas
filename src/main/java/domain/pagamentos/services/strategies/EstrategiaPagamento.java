@@ -1,6 +1,6 @@
-package api.patterns.strategy;
+package domain.pagamentos.services.strategies;
 
-import api.models.pagamento.Pagamento;
+import domain.pagamentos.models.Pagamento;
 
 public interface EstrategiaPagamento {
     void processarPagamento(Pagamento pagamento);

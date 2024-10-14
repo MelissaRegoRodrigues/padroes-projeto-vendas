@@ -1,6 +1,7 @@
-package api.models.pagamento;
+package domain.pagamentos.models.dados;
 
-public class DadosCartaoDebito implements DadosPagamento{
+public class DadosCartaoDebito implements DadosPagamento {
+
     private String numeroCartao;
     private String codigoSeguranca;
     private final int quantidadeParcelas = 1;
@@ -24,12 +25,9 @@ public class DadosCartaoDebito implements DadosPagamento{
 
     }
 
-
     public String getNumeroCartao() {
         return numeroCartao;
     }
-
-
 
     public String getCodigoSeguranca() {
         return codigoSeguranca;

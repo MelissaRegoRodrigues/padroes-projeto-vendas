@@ -1,8 +1,9 @@
-package api.models.pagamento;
+package domain.pagamentos.validators;
 
-import api.patterns.pagamento.COR.PagamentoHandler;
+import domain.pagamentos.models.Pagamento;
+import domain.pagamentos.models.dados.DadosPix;
 
-public class PagamentoPix extends PagamentoHandler {
+public class PagamentoPixHandler extends PagamentoHandler {
     @Override
     public boolean processar(Pagamento pagamento) {
         if (pagamento.getDadosPagamento() instanceof DadosPix) {

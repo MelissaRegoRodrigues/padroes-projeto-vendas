@@ -1,8 +1,16 @@
-package api.models.pagamento;
+package domain.pagamentos.validators;
 
-import api.patterns.pagamento.COR.PagamentoHandler;
+import domain.pagamentos.models.Pagamento;
+import infrastructure.apis.bandeiras.BandeiraAPI;
 
-public class PagamentoCartaoDebito extends PagamentoHandler {
+public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
+
+    BandeiraAPI bandeiraAPI;
+
+    public PagamentoCartaoDebitoHandler(BandeiraAPI bandeiraAPI) {
+        this.bandeiraAPI = bandeiraAPI;
+    }
+
     @Override
     public boolean processar(Pagamento pagamento) {
 //        if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
@@ -11,4 +19,5 @@ public class PagamentoCartaoDebito extends PagamentoHandler {
 //        }
         return checarProximo(pagamento);
     }
+
 }

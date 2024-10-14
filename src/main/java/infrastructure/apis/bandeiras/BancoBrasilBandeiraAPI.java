@@ -1,13 +1,15 @@
-package api.models.pagamento.instituicoes;
+package infrastructure.apis.bandeiras;
 
 import java.util.Random;
 
-public class BancoBrasil {
+public class BancoBrasilBandeiraAPI implements BandeiraAPI {
 
-    static public StatusPagamento solicitarAPI() {
+    @Override
+    public StatusPagamento solicitarPagemento() {
         Random random = new Random();
         int status = random.nextInt(0, 3);
 
         return StatusPagamento.values()[status];
     }
+
 }

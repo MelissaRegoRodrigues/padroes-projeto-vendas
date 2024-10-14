@@ -1,11 +1,10 @@
-package api.models.pagamento;
-
-import api.models.Cliente;
+package domain.pagamentos.models.dados;
 
 import java.time.LocalDateTime;
 
 
 public class DadosBoleto implements DadosPagamento{
+
    private String linkBoleto;
    private LocalDateTime dataPagamento;
 

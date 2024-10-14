@@ -1,11 +1,20 @@
-package api.models.pagamento;
+package domain.pagamentos.validators;
 
-import api.models.pagamento.instituicoes.BancoBrasil;
-import api.models.pagamento.instituicoes.StatusPagamento;
-import api.patterns.pagamento.COR.PagamentoHandler;
-import api.utils.TeatroUtils;
+import infrastructure.apis.bandeiras.BandeiraAPI;
+import infrastructure.apis.bandeiras.StatusPagamento;
+import domain.pagamentos.models.Pagamento;
+import domain.pagamentos.models.dados.DadosCartaoCredito;
+import infrastructure.utils.TeatroUtils;
 
-public class PagamentoCartaoCredito extends PagamentoHandler {
+public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
+
+    private BandeiraAPI bandeiraAPI;
+
+    /* TODO provavelmente cada bandeira se tornará um handler, mas mudei apenas pra não dar
+     * problema na hora de compilar*/
+    public PagamentoCartaoCreditoHandler(BandeiraAPI bandeiraAPI) {
+        this.bandeiraAPI = bandeiraAPI;
+    }
 
     @Override
     public boolean processar(Pagamento pagamento) {
@@ -13,12 +22,12 @@ public class PagamentoCartaoCredito extends PagamentoHandler {
             System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais.");
 
             TeatroUtils.esperar(5000);
-            StatusPagamento status = BancoBrasil.solicitarAPI();
+            StatusPagamento status = bandeiraAPI.solicitarPagemento();
             while (status == StatusPagamento.PENDENTE) {
                 TeatroUtils.esperar(5000);
                 System.out.println("O seu pagamento está demorando mais do que o esperado...");
                 TeatroUtils.esperar(3000);
-                status = BancoBrasil.solicitarAPI();
+                status = bandeiraAPI.solicitarPagemento();
             }
 
             if (status == StatusPagamento.ACEITO) {

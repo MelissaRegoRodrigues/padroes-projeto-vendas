@@ -1,8 +1,9 @@
-package api.models.pagamento;
+package domain.pagamentos.validators;
 
-import api.patterns.pagamento.COR.PagamentoHandler;
+import domain.pagamentos.models.Pagamento;
+import domain.pagamentos.models.dados.DadosBoleto;
 
-public class PagamentoBoleto extends PagamentoHandler {
+public class PagamentoBoletoHandler extends PagamentoHandler {
 
     @Override
     public boolean processar(Pagamento pagamento) {
@@ -12,4 +13,5 @@ public class PagamentoBoleto extends PagamentoHandler {
         }
         return checarProximo(pagamento);
     }
+
 }

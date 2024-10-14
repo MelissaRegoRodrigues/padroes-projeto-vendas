@@ -1,10 +1,8 @@
-package api.patterns.strategy;
+package domain.pagamentos.services.strategies;
 
-import api.models.pagamento.DadosPix;
-import api.models.pagamento.Pagamento;
+import domain.pagamentos.models.dados.DadosPix;
+import domain.pagamentos.models.Pagamento;
 import org.apache.commons.lang3.RandomStringUtils;
-
-import java.util.Scanner;
 
 public class EstrategiaPagamentoPix implements EstrategiaPagamento{
     @Override

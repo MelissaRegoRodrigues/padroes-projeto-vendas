@@ -1,6 +1,6 @@
-package api.patterns.pagamento.COR;
+package domain.pagamentos.validators;
 
-import api.models.pagamento.Pagamento;
+import domain.pagamentos.models.Pagamento;
 
 public abstract class PagamentoHandler {
     private PagamentoHandler proximo;

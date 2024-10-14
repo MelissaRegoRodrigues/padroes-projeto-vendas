@@ -1,7 +1,7 @@
-package api.patterns.strategy;
+package domain.pagamentos.services.strategies;
 
-import api.models.pagamento.DadosCartaoCredito;
-import api.models.pagamento.Pagamento;
+import domain.pagamentos.models.dados.DadosCartaoCredito;
+import domain.pagamentos.models.Pagamento;
 
 import java.util.Scanner;
 

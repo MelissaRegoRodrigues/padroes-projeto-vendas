@@ -1,4 +1,4 @@
-package api.models.pagamento.instituicoes;
+package infrastructure.apis.bandeiras;
 
 public enum StatusPagamento {
     PENDENTE,
