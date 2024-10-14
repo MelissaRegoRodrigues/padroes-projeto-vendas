@@ -6,11 +6,11 @@ import domain.pagamentos.models.Pagamento;
 import java.util.Scanner;
 
 public class EstrategiaPagamentoCartaoDebito implements EstrategiaPagamento {
-    private final DadosCartaoCredito dados = new DadosCartaoCredito();
 
     @Override
     public void processarPagamento(Pagamento pagamento) {
         Scanner scanner = new Scanner(System.in);
+        DadosCartaoCredito dados = new DadosCartaoCredito();
 
         System.out.println("Número cartão de crédito: ");
         dados.setNumeroCartao(scanner.next());

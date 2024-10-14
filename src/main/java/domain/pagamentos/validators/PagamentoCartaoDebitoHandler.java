@@ -1,6 +1,8 @@
 package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
+import domain.pagamentos.models.dados.DadosCartaoCredito;
+import domain.pagamentos.models.dados.DadosCartaoDebito;
 import infrastructure.apis.bandeiras.BandeiraAPI;
 
 public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
@@ -20,14 +22,15 @@ public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
         return checarProximo(pagamento);
     }
 
-    public void validarDadosBasicos() throws Exception {
-        if (!numeroCartao.matches("\\d{16}")) {
-            throw new Exception("Número do cartão de crédito inválido!");
+    @Override
+    public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
+        if (pagamento.getDadosPagamento() instanceof DadosCartaoDebito cartao) {
+            if (!cartao.getNumeroCartao().matches("\\d{16}")) {
+                throw new RuntimeException("Número do cartão de crédito inválido!");
+            }
+            if (!cartao.getCodigoSeguranca().matches("\\d{3}")) {
+                throw new RuntimeException("Código de segurança inválido!");
+            }
         }
-        if (!codigoSeguranca.matches("\\d{3}")) {
-            throw new Exception("Código de segurança inválido!");
-        }
-
     }
-
 }

@@ -19,6 +19,7 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
     @Override
     public boolean processar(Pagamento pagamento) {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
+            validarDadosBasicos(pagamento);
             System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais...");
 
             TeatroUtils.esperar(5000);
@@ -43,17 +44,20 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
         }
         return checarProximo(pagamento);
 
-        public void validarDadosBasicos(DadosCartaoCredito cartao) throws Exception {
-            cartao
-            if (!cartao.numeroCartao.matches("\\d{16}")) {
-                throw new Exception("Número do cartão de crédito inválido!");
-            }
-            if (!codigoSeguranca.matches("\\d{3}")) {
-                throw new Exception("Código de segurança inválido!");
-            }
-            if (quantidadeParcelas < 0) {
-                throw new Exception("Quantidade de parcelas deve ser maior que zero!");
-            }
+    }
+
+    @Override
+    public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
+        DadosCartaoCredito cartao = (DadosCartaoCredito) pagamento.getDadosPagamento();
+        if (!cartao.getNumeroCartao().matches("\\d{16}")) {
+            throw new RuntimeException("Número do cartão de crédito inválido!");
         }
+        if (!cartao.getCodigoSeguranca().matches("\\d{3}")) {
+            throw new RuntimeException("Código de segurança inválido!");
+        }
+        if (cartao.getQuantidadeParcelas() < 0) {
+            throw new RuntimeException("Quantidade de parcelas deve ser maior que zero!");
+        }
+
     }
 }

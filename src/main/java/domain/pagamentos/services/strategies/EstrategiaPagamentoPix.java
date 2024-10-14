@@ -4,9 +4,9 @@ import domain.pagamentos.models.dados.DadosPix;
 import domain.pagamentos.models.Pagamento;
 
 public class EstrategiaPagamentoPix implements EstrategiaPagamento{
-    DadosPix dados = new DadosPix();
     @Override
     public void processarPagamento(Pagamento pagamento) {
+        DadosPix dados = new DadosPix();
         String codigoAleatorio = "80.352.321/0004-37";
         dados.setChavePix(codigoAleatorio);
         System.out.println(dados.resumo());

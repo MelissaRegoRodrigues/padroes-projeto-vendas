@@ -7,10 +7,10 @@ import java.util.Scanner;
 
 public class EstrategiaPagamentoCartaoCredito implements EstrategiaPagamento {
 
-    private final DadosCartaoCredito dados = new DadosCartaoCredito();
 
     @Override
     public void processarPagamento(Pagamento pagamento) {
+        DadosCartaoCredito dados = new DadosCartaoCredito();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Número cartão de crédito: ");

@@ -1,7 +1,6 @@
 package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
-import domain.pagamentos.models.dados.DadosPagamento;
 
 public abstract class PagamentoHandler {
     private PagamentoHandler proximo;
@@ -25,6 +24,6 @@ public abstract class PagamentoHandler {
         return proximo.processar(pagamento);
     }
 
-     public abstract boolean validarDadosBasicos(DadosPagamento dados) throws Exception;
+     public abstract void validarDadosBasicos(Pagamento pagamento) throws RuntimeException;
 
 }
