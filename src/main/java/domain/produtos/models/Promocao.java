@@ -16,8 +16,8 @@ public class Promocao {
     public Promocao(Integer id, double desconto, Produto produto,
                     LocalDateTime tempoInicio, LocalDateTime tempoFim ) {
         this.id = id;
-        this.desconto = desconto;
         this.produto = produto;
+        this.desconto = desconto;
         this.tempoInicio = tempoInicio;
         this.tempoFim = tempoFim;
     }
@@ -28,7 +28,6 @@ public class Promocao {
         LocalDateTime dataAtual = LocalDateTime.now();
 
         if (dataAtual.isAfter(tempoInicio) && dataAtual.isBefore(tempoFim)) {
-            BigDecimal precoOrigem = produto.getPreco();
 
             if (this.desconto >= 100) {
                 throw new PromocaoInvalidaException();
@@ -38,6 +37,14 @@ public class Promocao {
         }else{
             throw new PromocaoInativaException();
         }
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
     }
 
     public Integer getId() {
@@ -54,14 +61,6 @@ public class Promocao {
 
     public void setDesconto(double desconto) {
         this.desconto = desconto;
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
     }
 
     public LocalDateTime getTempoInicio() {

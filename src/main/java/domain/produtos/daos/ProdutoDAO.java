@@ -42,7 +42,7 @@ public class ProdutoDAO {
                             rs.getInt("quantidade"),
                             rs.getBigDecimal("preco"),
                             Estoque.valueOf(rs.getString("status").toUpperCase()),
-                            null  // Você precisaria buscar a promoção separadamente
+                            null  // você precisaria buscar a promoção separadamente
                     );
                 }
             }
