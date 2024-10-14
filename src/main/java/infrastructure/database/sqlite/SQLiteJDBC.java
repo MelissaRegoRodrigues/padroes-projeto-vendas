@@ -1,4 +1,4 @@
-package api.sqlite;
+package infrastructure.database.sqlite;
 import java.sql.*;
 
 public class SQLiteJDBC {

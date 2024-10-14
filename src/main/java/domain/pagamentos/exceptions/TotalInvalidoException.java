@@ -1,4 +1,4 @@
-package api.exceptions;
+package domain.pagamentos.exceptions;
 
 public class TotalInvalidoException extends RuntimeException {
     public TotalInvalidoException() {

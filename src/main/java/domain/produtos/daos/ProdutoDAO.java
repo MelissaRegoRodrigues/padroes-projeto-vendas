@@ -1,8 +1,7 @@
 package domain.produtos.daos;
 
-import api.models.Estoque;
-import api.models.Produto;
-
+import domain.produtos.models.Produto;
+import domain.produtos.models.Estoque;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

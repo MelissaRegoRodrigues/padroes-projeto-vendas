@@ -1,4 +1,4 @@
-package api.exceptions;
+package domain.pagamentos.exceptions;
 
 public class PromocaoInvalidaException extends RuntimeException {
     public PromocaoInvalidaException() {

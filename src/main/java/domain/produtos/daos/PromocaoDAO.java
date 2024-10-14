@@ -1,9 +1,7 @@
 package domain.produtos.daos;
 
-
-import api.models.Produto;
-import api.models.Promocao;
-
+import domain.produtos.models.Promocao;
+import domain.produtos.models.Produto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

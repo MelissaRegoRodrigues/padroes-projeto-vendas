@@ -1,13 +1,17 @@
-import api.models.Carrinho;
-import api.models.Produto;
+package presentation;
 
-import api.models.pagamento.*;
-import api.patterns.pagamento.COR.PagamentoHandler;
-import api.patterns.strategy.ContextoEstrategiaPagamento;
-import api.patterns.strategy.EstrategiaPagamentoCartaoCredito;
-import api.patterns.strategy.EstrategiaPagamentoCartaoDebito;
-import api.patterns.strategy.EstrategiaPagamentoPix;
-
+import domain.pagamentos.validators.PagamentoCartaoCreditoHandler;
+import domain.pagamentos.validators.PagamentoCartaoDebitoHandler;
+import domain.pagamentos.validators.PagamentoHandler;
+import domain.pagamentos.services.strategies.ContextoEstrategiaPagamento;
+import domain.pagamentos.services.strategies.EstrategiaPagamentoCartaoCredito;
+import domain.pagamentos.services.strategies.EstrategiaPagamentoCartaoDebito;
+import domain.pagamentos.services.strategies.EstrategiaPagamentoPix;
+import domain.pagamentos.models.Pagamento;
+import domain.pagamentos.validators.PagamentoPixHandler;
+import domain.produtos.models.Carrinho;
+import domain.produtos.models.Produto;
+import infrastructure.apis.bandeiras.BancoBrasilBandeiraAPI;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,7 +23,12 @@ public class Main {
 
     private static List<Produto> produtos = new ArrayList<>();
     private static Carrinho carrinho = new Carrinho();
-    private static PagamentoHandler handlers = PagamentoHandler.encadear(new PagamentoCartaoCredito(), new PagamentoCartaoDebito(), new PagamentoPix());
+
+    // TODO Mudei para injear a API das bandeiras, mas provavelmente cada handler lidará com as bandeiras
+    private static PagamentoHandler handlers = PagamentoHandler.encadear(
+        new PagamentoCartaoCreditoHandler(new BancoBrasilBandeiraAPI()),
+        new PagamentoCartaoDebitoHandler(new BancoBrasilBandeiraAPI()),
+        new PagamentoPixHandler());
 
     public static void main(String[] args) {
         popularProdutos();
