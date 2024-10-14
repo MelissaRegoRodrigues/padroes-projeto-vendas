@@ -6,7 +6,7 @@ import domain.pagamentos.models.Pagamento;
 import java.util.Scanner;
 
 public class EstrategiaPagamentoCartaoDebito implements EstrategiaPagamento {
-    private DadosCartaoCredito dados;
+    private final DadosCartaoCredito dados = new DadosCartaoCredito();
 
     @Override
     public void processarPagamento(Pagamento pagamento) {
@@ -16,7 +16,8 @@ public class EstrategiaPagamentoCartaoDebito implements EstrategiaPagamento {
         dados.setNumeroCartao(scanner.next());
         System.out.println("Código de segurança: ");
         dados.setCodigoSeguranca(scanner.next());
-        dados.setQuantidadeParcelas(1);
+        System.out.println("Valor total será de R$ " + Math.round(pagamento.getValor() * 100) / 100.0);
+
         pagamento.setDadosPagamento(dados);
     }
 }

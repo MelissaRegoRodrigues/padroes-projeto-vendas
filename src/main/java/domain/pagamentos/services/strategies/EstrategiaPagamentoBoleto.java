@@ -3,13 +3,18 @@ package domain.pagamentos.services.strategies;
 import domain.pagamentos.models.dados.DadosBoleto;
 import domain.pagamentos.models.Pagamento;
 
-public class EstrategiaPagamentoBoleto implements EstrategiaPagamento{
+import java.time.LocalDateTime;
 
+public class EstrategiaPagamentoBoleto implements EstrategiaPagamento{
+    DadosBoleto dados = new DadosBoleto();
     @Override
     public void processarPagamento(Pagamento pagamento) {
-        if (pagamento.getDadosPagamento() instanceof DadosBoleto dados) {
-            String linkBoleto = "https://boletobancario/" + Math.random();
-            System.out.println("Link para geração do Boleto: " + linkBoleto);
-        }
+        dados.setLinkBoleto("https://boletobancario/" + Math.random());
+        dados.setDataPagamento(LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
+                LocalDateTime.now().getDayOfMonth() + 1, LocalDateTime.now().getHour(),
+                LocalDateTime.now().getMinute()));
+        System.out.println(dados.resumo());
+
+        pagamento.setDadosPagamento(dados);
     }
 }

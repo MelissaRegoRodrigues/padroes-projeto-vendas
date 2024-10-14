@@ -19,7 +19,7 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
     @Override
     public boolean processar(Pagamento pagamento) {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
-            System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais.");
+            System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais...");
 
             TeatroUtils.esperar(5000);
             StatusPagamento status = bandeiraAPI.solicitarPagemento();
@@ -42,5 +42,18 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
 
         }
         return checarProximo(pagamento);
+
+        public void validarDadosBasicos(DadosCartaoCredito cartao) throws Exception {
+            cartao
+            if (!cartao.numeroCartao.matches("\\d{16}")) {
+                throw new Exception("Número do cartão de crédito inválido!");
+            }
+            if (!codigoSeguranca.matches("\\d{3}")) {
+                throw new Exception("Código de segurança inválido!");
+            }
+            if (quantidadeParcelas < 0) {
+                throw new Exception("Quantidade de parcelas deve ser maior que zero!");
+            }
+        }
     }
 }

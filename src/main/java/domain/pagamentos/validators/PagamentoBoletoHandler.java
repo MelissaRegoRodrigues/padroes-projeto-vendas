@@ -3,6 +3,8 @@ package domain.pagamentos.validators;
 import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosBoleto;
 
+import java.time.LocalDateTime;
+
 public class PagamentoBoletoHandler extends PagamentoHandler {
 
     @Override
@@ -12,6 +14,18 @@ public class PagamentoBoletoHandler extends PagamentoHandler {
             return true;
         }
         return checarProximo(pagamento);
+    }
+
+
+    public boolean validarDadosBasicos(DadosBoleto boleto) throws Exception {
+        if (boleto.getLinkBoleto() == null) {
+
+            throw new Exception("Link Boleto deve ser definido");
+
+        }
+        if (boleto.getDataPagamento() == null || boleto.getDataPagamento().isBefore(LocalDateTime.now())) {
+            throw new Exception("Data de Pagamento inválida!");
+        }
     }
 
 }

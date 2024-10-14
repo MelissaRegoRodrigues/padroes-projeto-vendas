@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class EstrategiaPagamentoCartaoCredito implements EstrategiaPagamento {
 
-    private DadosCartaoCredito dados = new DadosCartaoCredito();
+    private final DadosCartaoCredito dados = new DadosCartaoCredito();
 
     @Override
     public void processarPagamento(Pagamento pagamento) {

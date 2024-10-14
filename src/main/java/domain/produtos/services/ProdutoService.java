@@ -7,7 +7,7 @@ import domain.produtos.models.Produto;
 
 import java.util.List;
 
-public interface PagamentoService {
+public interface ProdutoService {
     List<Produto> getAllProdutos();
     void addProdutoToCarrinho(Produto produto);
     List<Produto> getCarrinho();

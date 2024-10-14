@@ -1,28 +1,25 @@
 package domain.pagamentos.models.dados;
 
+import java.time.LocalDateTime;
+
 public class DadosCartaoDebito implements DadosPagamento {
 
     private String numeroCartao;
     private String codigoSeguranca;
-    private final int quantidadeParcelas = 1;
+    private LocalDateTime dataPagamento;
 
     public DadosCartaoDebito() {
     }
 
-    public DadosCartaoDebito(String numeroCartao, String codigoSeguranca) {
+    public DadosCartaoDebito(String numeroCartao, String codigoSeguranca, LocalDateTime dataPagamento) {
         this.numeroCartao = numeroCartao;
         this.codigoSeguranca = codigoSeguranca;
+        this.dataPagamento = dataPagamento;
     }
-
+    
     @Override
-    public void validarDadosBasicos() throws Exception {
-        if (!numeroCartao.matches("\\d{16}")) {
-            throw new Exception("Número do cartão de crédito inválido!");
-        }
-        if (!codigoSeguranca.matches("\\d{3}")) {
-            throw new Exception("Código de segurança inválido!");
-        }
-
+    public String resumo(){
+        return "Cartão de Débito com final " + numeroCartao.substring(numeroCartao.length() - 4) ;
     }
 
     public String getNumeroCartao() {
@@ -33,10 +30,6 @@ public class DadosCartaoDebito implements DadosPagamento {
         return codigoSeguranca;
     }
 
-    public int getQuantidadeParcelas() {
-        return quantidadeParcelas;
-    }
-
     public void setCodigoSeguranca(String codigoSeguranca) {
         this.codigoSeguranca = codigoSeguranca;
     }
@@ -45,5 +38,10 @@ public class DadosCartaoDebito implements DadosPagamento {
         this.numeroCartao = numeroCartao;
     }
 
-
+    public LocalDateTime getDataPagamento() {
+        return dataPagamento;
+    }
+    public void setDataPagamento(LocalDateTime dataPagamento) {
+        this.dataPagamento = dataPagamento;
+    }
 }

@@ -20,4 +20,14 @@ public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
         return checarProximo(pagamento);
     }
 
+    public void validarDadosBasicos() throws Exception {
+        if (!numeroCartao.matches("\\d{16}")) {
+            throw new Exception("Número do cartão de crédito inválido!");
+        }
+        if (!codigoSeguranca.matches("\\d{3}")) {
+            throw new Exception("Código de segurança inválido!");
+        }
+
+    }
+
 }
