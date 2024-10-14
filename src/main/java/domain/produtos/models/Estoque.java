@@ -1,4 +1,4 @@
-package api.models;
+package domain.produtos.models;
 
 public enum Estoque {
     DISPONIVEL,
