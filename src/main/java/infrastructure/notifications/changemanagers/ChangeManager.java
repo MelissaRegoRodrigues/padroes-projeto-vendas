@@ -1,4 +1,7 @@
-package api.patterns.observermediator.abstraction;
+package infrastructure.notifications.changemanagers;
+
+import infrastructure.notifications.Observer;
+import infrastructure.notifications.Subject;
 
 /**
  * Mediator que coordena a comunicação entre subjects e observers do sistema, permitindo maior flexibilidade

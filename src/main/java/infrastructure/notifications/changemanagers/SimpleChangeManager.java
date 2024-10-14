@@ -1,8 +1,7 @@
-package api.patterns.observermediator.impl;
+package infrastructure.notifications.changemanagers;
 
-import api.patterns.observermediator.abstraction.ChangeManager;
-import api.patterns.observermediator.abstraction.Observer;
-import api.patterns.observermediator.abstraction.Subject;
+import infrastructure.notifications.Observer;
+import infrastructure.notifications.Subject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

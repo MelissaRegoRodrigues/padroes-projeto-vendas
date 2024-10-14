@@ -1,12 +1,11 @@
-package api;
-
-import api.models.*;
 import api.models.pagamento.*;
 import api.patterns.pagamento.COR.PagamentoHandler;
 import api.patterns.strategy.ContextoEstrategiaPagamento;
 import api.patterns.strategy.EstrategiaPagamentoCartaoCredito;
 import api.patterns.strategy.EstrategiaPagamentoCartaoDebito;
 import api.patterns.strategy.EstrategiaPagamentoPix;
+import domain.produtos.models.Carrinho;
+import domain.produtos.models.Produto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -104,7 +103,7 @@ public class Main {
     private static void verTodosProdutos() {
         System.out.println("Produtos disponíveis:");
         for (Produto produto : produtos) {
-            System.out.println(produto.getCodigo() + " - " + produto.getNome() + ": " + produto.getDescricao() + " - " + produto.getPreco() + "R$");
+            System.out.println(produto.getId() + " - " + produto.getNome() + ": " + produto.getDescricao() + " - " + produto.getPreco() + "R$");
         }
     }
 
@@ -114,7 +113,7 @@ public class Main {
 
         Produto produtoEscolhido = null;
         for (Produto produto : produtos) {
-            if (produto.getCodigo() == codigo) {
+            if (produto.getId() == codigo) {
                 produtoEscolhido = produto;
                 break;
             }
@@ -161,7 +160,7 @@ public class Main {
 
         Produto produtoParaRemover = null;
         for (Produto produto : produtos) {
-            if (produto.getCodigo() == codigo) {
+            if (produto.getId() == codigo) {
                 produtoParaRemover = produto;
                 break;
             }
@@ -221,4 +220,5 @@ public class Main {
         produtos.add(new Produto(2, "Notebook", "Notebook Gamer", 5, new BigDecimal("4500.00"), null, null));
         produtos.add(new Produto(3, "Fone de Ouvido", "Fone Bluetooth", 20, new BigDecimal("200.00"), null, null));
     }
+
 }

@@ -1,7 +1,7 @@
-package api.dao;
+package api.database.dao;
 
-import api.models.Produto;
-import api.models.Estoque;
+import domain.produtos.models.Produto;
+import domain.produtos.models.Estoque;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,9 +17,9 @@ public class ProdutoDAO {
 
     // C
     public void adicionarProduto(Produto produto) throws SQLException {
-        String sql = "INSERT INTO produto (codigo, nome, descricao, quantidade, preco, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO produto (id, nome, descricao, quantidade, preco, status) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, produto.getCodigo());
+            pstmt.setInt(1, produto.getId());
             pstmt.setString(2, produto.getNome());
             pstmt.setString(3, produto.getDescricao());
             pstmt.setInt(4, produto.getQuantidade());
@@ -30,14 +30,14 @@ public class ProdutoDAO {
     }
 
     // R
-    public Produto buscarProdutoPorCodigo(Integer codigo) throws SQLException {
-        String sql = "SELECT * FROM produto WHERE codigo = ?";
+    public Produto buscarProdutoPorCodigo(Integer id) throws SQLException {
+        String sql = "SELECT * FROM produto WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, codigo);
+            pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     return new Produto(
-                            rs.getInt("codigo"),
+                            rs.getInt("id"),
                             rs.getString("nome"),
                             rs.getString("descricao"),
                             rs.getInt("quantidade"),
@@ -59,7 +59,7 @@ public class ProdutoDAO {
 
             while (rs.next()) {
                 Produto produto = new Produto(
-                        rs.getInt("codigo"),
+                        rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getString("descricao"),
                         rs.getInt("quantidade"),
@@ -75,23 +75,23 @@ public class ProdutoDAO {
 
     // U
     public void atualizarProduto(Produto produto) throws SQLException {
-        String sql = "UPDATE produto SET nome = ?, descricao = ?, quantidade = ?, preco = ?, status = ? WHERE codigo = ?";
+        String sql = "UPDATE produto SET nome = ?, descricao = ?, quantidade = ?, preco = ?, status = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, produto.getNome());
             pstmt.setString(2, produto.getDescricao());
             pstmt.setInt(3, produto.getQuantidade());
             pstmt.setBigDecimal(4, produto.getPreco());
             pstmt.setString(5, produto.getStatus().name());
-            pstmt.setInt(6, produto.getCodigo());
+            pstmt.setInt(6, produto.getId());
             pstmt.executeUpdate();
         }
     }
 
     // D
-    public void deletarProduto(int codigo) throws SQLException {
-        String sql = "DELETE FROM produto WHERE codigo = ?";
+    public void deletarProduto(int id) throws SQLException {
+        String sql = "DELETE FROM produto WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, codigo);
+            pstmt.setInt(1, id);
             pstmt.executeUpdate();
         }
     }
