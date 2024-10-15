@@ -14,7 +14,8 @@ public class Main {
     private static PagamentoServiceImpl pagamentoService = new PagamentoServiceImpl();
     private static ProdutoServiceImpl produtoService = new ProdutoServiceImpl(
         SQLiteDBConnection.getConnection(),
-        new ScheduledChangeManager(Executors.newScheduledThreadPool(1), Executors.newFixedThreadPool(5)));
+        new ScheduledChangeManager(Executors.newScheduledThreadPool(1), Executors.newFixedThreadPool(5)),
+        new PagamentoServiceImpl());
 
     public static void main(String[] args) {
         SQLiteDBConnection.createDatabase();

@@ -1,5 +1,6 @@
 package domain.produtos.services;
 
+import domain.pagamentos.services.PagamentoService;
 import domain.produtos.daos.ProdutoDAO;
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
@@ -22,13 +23,16 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
     private final Carrinho carrinho;
 
+    private final PagamentoService pagamentoService;
 
     private final ChangeManager changeManager;
 
-    public ProdutoServiceImpl(Connection connection, ChangeManager changeManager) {
+    public ProdutoServiceImpl(Connection connection, ChangeManager changeManager,
+                              PagamentoService pagamentoService) {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
         this.changeManager = changeManager;
         this.carrinho = new Carrinho();
+        this.pagamentoService = pagamentoService;
     }
 
 
@@ -118,7 +122,6 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
         List<Pair<Produto, Integer>> disponiveis = new ArrayList<>();
         List<Produto> indisponiveis = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
 
         for (Pair<Produto, Integer> pair : carrinho.getProdutoQnt()) {
             Optional<Produto> produto = produtoDAO.buscarPorId(pair.left().getId());
@@ -129,20 +132,20 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
             }
 
             disponiveis.add(pair);
-            total = total.add(produto.get().calcularPreco());
         }
 
+        BigDecimal total = carrinho.calcularPreco();
         printResumoCarrinho(disponiveis, indisponiveis, total);
 
         boolean prosseguir = BetterInputs.getConfirmation("Você deseja prosseguir?", false);
 
         if (prosseguir) {
-            //
-        } else {
+            pagamentoService.pagar(total);
+            atualizarEstoque(carrinho.getProdutoQnt());
             return;
         }
 
-        carrinho.esvazear();
+        System.out.println("Não foi possível finalizar sua compra.");
     }
 
     private void printResumoCarrinho(List<Pair<Produto, Integer>> disponiveis, List<Produto> indisponiveis,
@@ -160,8 +163,9 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
     private void atualizarEstoque(List<Pair<Produto, Integer>> produtoQtd) {
         for (var pair : produtoQtd) {
-            Produto produto = pair.left();
+
             int qtd = pair.right();
+            Produto produto = pair.left();
 
             produto.setQuantidade(produto.getQuantidade() - qtd);
             produtoDAO.atualizarProduto(produto);
@@ -185,7 +189,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
         printProdutosEQuantidade(carrinho.getProdutoQnt());
 
-        System.out.printf("Total do carrinho: R$%.2f", carrinho.calcularPreco());
+        System.out.printf("Total do carrinho: R$%.2f %n", carrinho.calcularPreco());
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

@@ -51,7 +51,7 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
     @Override
     public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
         DadosCartaoCredito cartao = (DadosCartaoCredito) pagamento.getDadosPagamento();
-        if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+        if(pagamento.getValor().compareTo(BigDecimal.ZERO) <= 0){
             throw new RuntimeException("Valor deve ser maior que zero");
         }
         if (!cartao.getNumeroCartao().matches("\\d{16}")) {
@@ -70,6 +70,6 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
         int quantidadeParcelas = ((DadosCartaoCredito) pagamento.getDadosPagamento()).getQuantidadeParcelas();
         BigDecimal valorTotal = pagamento.getValor();
 
-        return valorTotal.divide(new BigDecimal(quantidadeParcelas), RoundingMode.HALF_UP);
+        return valorTotal.divide(new BigDecimal(quantidadeParcelas)).setScale(2, RoundingMode.HALF_UP);
     }
 }

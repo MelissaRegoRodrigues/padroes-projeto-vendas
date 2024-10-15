@@ -80,8 +80,9 @@ public class Carrinho {
     }
 
     public BigDecimal calcularPreco() {
-        return produtoQnt.keySet().stream()
-            .map(Produto::getPreco)
+        return produtoQnt.entrySet().stream()
+            .filter(entry -> entry.getKey().getStatus() == Estoque.DISPONIVEL)
+            .map(entry -> entry.getKey().getPreco().multiply(BigDecimal.valueOf(entry.getValue())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

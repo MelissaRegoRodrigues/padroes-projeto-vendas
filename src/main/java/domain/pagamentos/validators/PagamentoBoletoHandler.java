@@ -28,7 +28,7 @@ public class PagamentoBoletoHandler extends PagamentoHandler {
     @Override
     public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
         DadosBoleto boleto = (DadosBoleto) pagamento.getDadosPagamento();
-        if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+        if(pagamento.getValor().compareTo(BigDecimal.ZERO) <= 0){
             throw new RuntimeException("Valor deve ser maior que zero");
         }
         if (boleto.getLinkBoleto() == null) {

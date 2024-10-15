@@ -26,7 +26,7 @@ public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
     @Override
     public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoDebito cartao) {
-            if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+            if(pagamento.getValor().compareTo(BigDecimal.ZERO) <= 0){
                 throw new RuntimeException("Valor deve ser maior que zero");
             }
             if (!cartao.getNumeroCartao().matches("\\d{16}")) {
