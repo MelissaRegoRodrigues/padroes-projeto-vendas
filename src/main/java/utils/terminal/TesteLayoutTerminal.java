@@ -2,7 +2,6 @@ package utils.terminal;
 
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
-import domain.produtos.models.Promocao;
 import utils.terminal.tabelas.TablePrinter;
 
 import java.math.BigDecimal;
@@ -16,10 +15,8 @@ public class TesteLayoutTerminal {
         Carrinho carrinho = new Carrinho();
 
         List<Produto> produtos = Arrays.asList(
-            new Produto(1, "Banana", 5, new BigDecimal(555555555555555555.55), null)
+            new Produto(1, "Banana", 5, new BigDecimal(555555555555555555.55))
         );
-
-        produtos.get(0).setPromocao(new Promocao(1, 0.2, LocalDateTime.now(), LocalDateTime.now()));
 
         carrinho.adicionarProduto(produtos.get(0), produtos.get(0).getQuantidade());
 

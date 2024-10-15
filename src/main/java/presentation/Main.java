@@ -11,10 +11,11 @@ import java.util.concurrent.Executors;
 
 public class Main {
 
-    private static PagamentoServiceImpl pagamentoService = new PagamentoServiceImpl();
-    private static ProdutoServiceImpl produtoService = new ProdutoServiceImpl(
+    private static final PagamentoServiceImpl pagamentoService = new PagamentoServiceImpl();
+    private static final ProdutoServiceImpl produtoService = new ProdutoServiceImpl(
         SQLiteDBConnection.getConnection(),
-        new ScheduledChangeManager(Executors.newScheduledThreadPool(1), Executors.newFixedThreadPool(5)));
+        new ScheduledChangeManager(Executors.newScheduledThreadPool(1), Executors.newFixedThreadPool(5)),
+        new PagamentoServiceImpl());
 
     public static void main(String[] args) {
         SQLiteDBConnection.createDatabase();
@@ -44,7 +45,7 @@ public class Main {
                 "Ver todos os produtos",
                 "Adicionar produto ao carrinho",
                 "Ver carrinho de compras",
-                "Remoer produto do carrinho",
+                "Remover produto do carrinho",
                 "Comprar produtos no carrinho",
                 "Voltar");
 

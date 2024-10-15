@@ -1,10 +1,9 @@
 package domain.produtos.services;
 
+import domain.pagamentos.services.PagamentoService;
 import domain.produtos.daos.ProdutoDAO;
-import domain.produtos.daos.PromocaoDAO;
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
-import domain.produtos.models.Promocao;
 import infrastructure.notifications.Observer;
 import infrastructure.notifications.Subject;
 import infrastructure.notifications.changemanagers.ChangeManager;
@@ -14,26 +13,25 @@ import utils.Pair;
 import utils.terminal.tabelas.TablePrinter;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
-
-import static domain.produtos.models.Estoque.DISPONIVEL;
 import static domain.produtos.models.Estoque.INDISPONIVEL;
 
-public class ProdutoServiceImpl implements Subject<Promocao> {
+public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
     private final ProdutoDAO produtoDAO;
 
-    private PromocaoDAO promocaoDAO;
+    private final Carrinho carrinho;
 
-    private Carrinho carrinho;
+    private final PagamentoService pagamentoService;
 
     private final ChangeManager changeManager;
 
-    public ProdutoServiceImpl(Connection connection, ChangeManager changeManager) {
+    public ProdutoServiceImpl(Connection connection, ChangeManager changeManager,
+                              PagamentoService pagamentoService) {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
         this.changeManager = changeManager;
         this.carrinho = new Carrinho();
+        this.pagamentoService = pagamentoService;
     }
 
 
@@ -43,29 +41,40 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
         TablePrinter.printTable(produtos,
             column1 -> column1.header("ID").with(produto -> produto.getId().toString()),
             column2 -> column2.header("PRODUTO").with(Produto::getNome),
-            column3 -> column3.header("PREÇO (R$)").with(produto -> String.format("R$%.2f", produto.getPreco())),
-            column4 -> column4.header("PROMOCAO").with(produto -> produto.getPromocao().getDesconto()*100 + "%"),
-            column5 -> column5.header("PREÇO (R$) DESC.").with(produto -> produto.calcularPreco().toString())
+            column3 -> column3.header("PREÇO (R$)").with(produto -> String.format("%.2f", produto.getPreco())),
+            column4 -> column4.header("PROMOCAO").with(produto -> produto.getPromocao() + "%"),
+            column5 -> column5.header("PREÇO (R$) DESC.").with(produto -> "%.2f".formatted(produto.calcularPreco()))
         );
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void adicionarProdutoAoCarrinho() {
-        int id = inputProdutoId("Informe o ID do produto que vocÇe deseja adicionar (0 para voltar)");
+        int id = BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(0)
+            .read("Fornça o ID do produto que você deseja adicionar ao carrinho (0 para voltar)");
 
         if (id == 0) return;
 
-        Produto produto = carrinho.getProdutoQnt(id).get().left();
+        Optional<Produto> resultado = produtoDAO.buscarPorId(id);
+
+        if (resultado.isEmpty()) {
+            System.out.printf("Não há um produto com o ID %d especificado %n", id);
+            return;
+        } else if (resultado.get().getStatus() == INDISPONIVEL){
+            System.out.printf("O produto de ID %d está indisponível", id);
+            return;
+        }
+
+        Produto produto = resultado.get();
 
         int qnt = inputUnidades("Quantas unidades do produto %s você deseja adicionar?"
                   .formatted(produto.getNome()));
 
         int novaQnt = carrinho.adicionarProduto(produto, qnt);
-        System.out.printf("%d unidades do produto %s foram adicionadas ao carrinho%n", qnt, produto.getNome());
+        System.out.printf("%d unidades do produto %s foram adicionadas ao carrinho %n", qnt, produto.getNome());
         System.out.printf("Agora há %d unidades", novaQnt);
     }
 
-    private int inputProdutoId(String prompt) {
+    private int inputProdutoIdDoCarrinho(String prompt) {
         return BetterInputs.prepareIO().newIntInputReader()
             .withValueChecker((value, name) -> {
                 // Retorno nulo significa que não é para lançar erro
@@ -89,7 +98,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
             return;
         }
 
-        int id = inputProdutoId("Informe o ID do produto que você deseja remover (0 para voltar):");
+        int id = inputProdutoIdDoCarrinho("Informe o ID do produto que você deseja remover (0 para voltar):");
 
         if (id == 0) return;
 
@@ -111,7 +120,6 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
 
         List<Pair<Produto, Integer>> disponiveis = new ArrayList<>();
         List<Produto> indisponiveis = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
 
         for (Pair<Produto, Integer> pair : carrinho.getProdutoQnt()) {
             Optional<Produto> produto = produtoDAO.buscarPorId(pair.left().getId());
@@ -122,20 +130,20 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
             }
 
             disponiveis.add(pair);
-            total = total.add(produto.get().calcularPreco());
         }
 
+        BigDecimal total = carrinho.calcularPreco();
         printResumoCarrinho(disponiveis, indisponiveis, total);
 
         boolean prosseguir = BetterInputs.getConfirmation("Você deseja prosseguir?", false);
 
         if (prosseguir) {
-            // executa o pagamentoService
-        } else {
+            pagamentoService.pagar(total);
+            atualizarEstoque(carrinho.getProdutoQnt());
             return;
         }
 
-        carrinho.esvazear();
+        System.out.println("Não foi possível finalizar sua compra.");
     }
 
     private void printResumoCarrinho(List<Pair<Produto, Integer>> disponiveis, List<Produto> indisponiveis,
@@ -153,8 +161,9 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
 
     private void atualizarEstoque(List<Pair<Produto, Integer>> produtoQtd) {
         for (var pair : produtoQtd) {
-            Produto produto = pair.left();
+
             int qtd = pair.right();
+            Produto produto = pair.left();
 
             produto.setQuantidade(produto.getQuantidade() - qtd);
             produtoDAO.atualizarProduto(produto);
@@ -178,45 +187,51 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
 
         printProdutosEQuantidade(carrinho.getProdutoQnt());
 
-        System.out.println("Total do carrinho: " + carrinho.calcularPreco() + "R$");
+        System.out.printf("Total do carrinho: R$%.2f %n", carrinho.calcularPreco());
     }
 
-    // TODO colocar lógica de interação para adicionar promoção
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public void addPromocao(Integer idProduto, Promocao promocao) {
+    public void addPromocao() {
+        int idProduto = BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(0)
+            .read("Informe o ID do produto ao qual você deseja aplicar o desconto (0 para voltar)");
 
-        try{
-            promocaoDAO.atualizarPromocao(promocao);
-            Produto produtoNoBanco = produtoDAO.buscarPorId(idProduto).get();
+        if (idProduto == 0) return;
 
-            if (produtoNoBanco != null) {
+        Optional<Produto> resultado = produtoDAO.buscarPorId(idProduto);
 
-                if (produtoNoBanco.getStatus() == DISPONIVEL) {
-                    produtoNoBanco.setPromocao(promocao);
-                } else {
-                    System.out.println("Produto INDISPONÍVEL para aplicar a promoção.");
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar produto para adicionar promoção.", e);
+        if (resultado.isEmpty()) {
+            System.out.printf("Não existe um produto com o ID %d especificado %n", idProduto);
+            return;
+        } else if (resultado.get().getStatus() == INDISPONIVEL) {
+            System.out.printf("O produto %s com ID %d não está disponível no momento",
+                resultado.get().getNome(), resultado.get().getId());
+            return;
         }
+
+        int promocao = BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(1)
+            .withMaxVal(99)
+            .read("Informe o valor da promoção em formato inteiro no intervalo de 1 a 99: ");
+
+        resultado.get().setPromocao(promocao);
+        produtoDAO.atualizarProduto(resultado.get());
+        System.out.printf("O desconto de %d foi aplicado ao produto %s !", promocao, resultado.get().getNome());
     }
 
 
     // NOTIFICAÇÕES
     @Override
-    public void anexar(Observer<Promocao> observer) {
+    public void anexar(Observer<PromocaoInfo> observer) {
         changeManager.adicionarObserver(this, observer);
     }
 
     @Override
-    public void desanexar(Observer<Promocao> observer) {
+    public void desanexar(Observer<PromocaoInfo> observer) {
         changeManager.removerObserver(this, observer);
     }
 
     @Override
-    public void notificar(Promocao dados) {
+    public void notificar(PromocaoInfo dados) {
         changeManager.notificar(this, dados);
     }
 

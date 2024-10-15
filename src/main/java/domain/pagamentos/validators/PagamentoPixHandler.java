@@ -37,7 +37,7 @@ public class PagamentoPixHandler extends PagamentoHandler {
             !Pattern.matches(TELEFONE_REGEX, chavePix)) {
             throw new RuntimeException("Chave pix inválida");
         }
-        if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+        if(pagamento.getValor().compareTo(BigDecimal.ZERO) <= 0){
             throw new RuntimeException("Valor deve ser maior que zero");
         }
 
