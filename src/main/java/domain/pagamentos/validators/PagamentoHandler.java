@@ -4,6 +4,8 @@ import domain.pagamentos.models.Pagamento;
 import infrastructure.apis.banco.BancoAPI;
 import infrastructure.apis.banco.BancoBrasilAPI;
 
+import java.math.BigDecimal;
+
 public abstract class PagamentoHandler {
     private PagamentoHandler proximo;
     private BancoAPI bancoAPI;
