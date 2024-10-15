@@ -85,6 +85,7 @@ public class ProdutoDAO {
             pstmt.setInt(2, produto.getQuantidade());
             pstmt.setBigDecimal(3, produto.getPreco());
             pstmt.setInt(4, produto.getPromocao());
+            pstmt.setInt(5, produto.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
