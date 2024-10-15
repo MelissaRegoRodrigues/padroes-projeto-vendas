@@ -16,7 +16,7 @@ public class PromocaoDAO {
     }
 
     // C
-    public void adicionarPromocao(Promocao promocao, int idProduto) throws SQLException {
+    public void adicionarPromocao(Promocao promocao, int idProduto){
         String sql = "INSERT INTO promocao (desconto, produto_id, tempoInicio, tempoFim) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setDouble(1, promocao.getDesconto());
@@ -24,29 +24,33 @@ public class PromocaoDAO {
             pstmt.setTimestamp(3, Timestamp.valueOf(promocao.getTempoInicio()));
             pstmt.setTimestamp(4, Timestamp.valueOf(promocao.getTempoFim()));
             pstmt.executeUpdate();
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     // R
-    public Promocao buscarPromocaoPorId(Integer promocaoId) throws SQLException {
+    public Optional<Promocao> buscarPromocaoPorId(Integer promocaoId) {
         String sql = "SELECT * FROM promocao WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, promocaoId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Promocao(
-                        rs.getInt("promocaoId"),
-                        rs.getDouble("desconto"),
-                        rs.getTimestamp("tempoInicio").toLocalDateTime(),
-                        rs.getTimestamp("tempoFim").toLocalDateTime()
-                    );
+                    return Optional.of(new Promocao(
+                            rs.getInt("promocaoId"),
+                            rs.getDouble("desconto"),
+                            rs.getTimestamp("tempoInicio").toLocalDateTime(),
+                            rs.getTimestamp("tempoFim").toLocalDateTime()
+                    ));
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public List<Promocao> listarTodasPromocoes() throws SQLException {
+    public List<Promocao> listarTodasPromocoes() {
         List<Promocao> promocoes = new ArrayList<>();
         String sql = "SELECT * FROM promocao";
         try (Statement stmt = connection.createStatement();
@@ -62,12 +66,14 @@ public class PromocaoDAO {
                 );
                 promocoes.add(promocao);
             }
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return promocoes;
     }
 
     // U
-    public void atualizarPromocao(Promocao promocao) throws SQLException {
+    public void atualizarPromocao(Promocao promocao) {
         String sql = "UPDATE promocao SET desconto = ?, tempoInicio = ?, tempoFim = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setDouble(1, promocao.getDesconto());
@@ -75,15 +81,19 @@ public class PromocaoDAO {
             pstmt.setTimestamp(3, Timestamp.valueOf(promocao.getTempoFim()));
             pstmt.setInt(4, promocao.getId());
             pstmt.executeUpdate();
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     // D
-    public void deletarPromocao(int promocaoId) throws SQLException {
+    public void deletarPromocao(int promocaoId){
         String sql = "DELETE FROM promocao WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, promocaoId);
             pstmt.executeUpdate();
+        }catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -32,6 +32,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
 
     public ProdutoServiceImpl(Connection connection, ChangeManager changeManager) {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
+        this.promocaoDAO = new PromocaoDAO(connection);
         this.changeManager = changeManager;
     }
 
@@ -60,7 +61,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
                   .formatted(produto.getNome()));
 
         int novaQnt = carrinho.adicionarProduto(produto, qnt);
-        System.out.printf("%d unidades do produto %s foram adicionadas ao carrinho%n", qnt, produto.getNome());
+        System.out.printf("%d unidades do produto %s foram adicionadas ao carrinho %n", qnt, produto.getNome());
         System.out.printf("Agora há %d unidades", novaQnt);
     }
 
@@ -184,22 +185,26 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void addPromocao(Integer idProduto, Promocao promocao) {
 
-        try{
-            promocaoDAO.atualizarPromocao(promocao);
+            Optional<Promocao> promocaoBuscada = promocaoDAO.buscarPromocaoPorId(promocao.getId());
+
+            if (promocaoBuscada.isPresent()) {
+                promocaoDAO.atualizarPromocao(promocaoBuscada.get());
+            }else {
+                promocaoDAO.adicionarPromocao(promocao, idProduto);
+            }
+
             Produto produtoNoBanco = produtoDAO.buscarPorId(idProduto).get();
 
             if (produtoNoBanco != null) {
-
                 if (produtoNoBanco.getStatus() == DISPONIVEL) {
                     produtoNoBanco.setPromocao(promocao);
                 } else {
+
                     System.out.println("Produto INDISPONÍVEL para aplicar a promoção.");
                 }
             }
 
-        } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar produto para adicionar promoção.", e);
-        }
+
     }
 
 

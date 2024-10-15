@@ -12,7 +12,7 @@ public class Promocao {
 
     private LocalDateTime tempoFim;
 
-    public static Promocao SEM_PROMOCAO = new Promocao(0, 1, LocalDateTime.MIN, LocalDateTime.MIN);
+    public static Promocao SEM_PROMOCAO = new Promocao(0, 0, LocalDateTime.MIN, LocalDateTime.MIN);
 
     public Promocao(Integer id, double desconto, LocalDateTime tempoInicio, LocalDateTime tempoFim ) {
         this.id = id;
