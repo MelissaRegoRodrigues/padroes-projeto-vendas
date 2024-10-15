@@ -138,8 +138,12 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         boolean prosseguir = BetterInputs.getConfirmation("Você deseja prosseguir?", false);
 
         if (prosseguir) {
-            pagamentoService.pagar(total);
-            atualizarEstoque(carrinho.getProdutoQnt());
+            try {
+                pagamentoService.pagar(total);
+                atualizarEstoque(carrinho.getProdutoQnt());
+            } catch (RuntimeException e) {
+                System.out.println("Não foi possível finalizar sua compra");
+            }
             return;
         }
 
@@ -168,6 +172,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
             produto.setQuantidade(produto.getQuantidade() - qtd);
             produtoDAO.atualizarProduto(produto);
         }
+        carrinho.esvazear();
     }
 
     private void printProdutosEQuantidade(List<Pair<Produto, Integer>> pairs) {
