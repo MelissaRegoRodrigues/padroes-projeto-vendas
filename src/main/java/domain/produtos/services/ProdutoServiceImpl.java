@@ -34,6 +34,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
         this.promocaoDAO = new PromocaoDAO(connection);
         this.changeManager = changeManager;
+        this.carrinho = new Carrinho();
     }
 
 

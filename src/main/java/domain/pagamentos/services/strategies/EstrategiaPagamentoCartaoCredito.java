@@ -29,7 +29,6 @@ public class EstrategiaPagamentoCartaoCredito implements EstrategiaPagamento {
         int quantidadeParcelas = ((DadosCartaoCredito) pagamento.getDadosPagamento()).getQuantidadeParcelas();
         BigDecimal valorTotal = pagamento.getValor();
 
-        // TODO verificar quantidade de parcelas passadas
         return valorTotal.divide(new BigDecimal(quantidadeParcelas), RoundingMode.HALF_UP);
     }
 }

@@ -2,7 +2,6 @@ package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
 import infrastructure.apis.banco.BancoAPI;
-import infrastructure.apis.banco.BancoBrasilAPI;
 
 public abstract class PagamentoHandler {
     private PagamentoHandler proximo;
