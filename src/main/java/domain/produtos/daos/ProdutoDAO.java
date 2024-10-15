@@ -17,11 +17,12 @@ public class ProdutoDAO {
 
     // C
     public void adicionarProduto(Produto produto) {
-        String sql = "INSERT INTO produto (nome, quantidade, preco) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO produto (nome, quantidade, preco, promocao) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, produto.getNome());
             pstmt.setInt(2, produto.getQuantidade());
             pstmt.setBigDecimal(3, produto.getPreco());
+            pstmt.setInt(4, produto.getPromocao());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -40,7 +41,8 @@ public class ProdutoDAO {
                         rs.getInt("id"),
                         rs.getString("nome"),
                         rs.getInt("quantidade"),
-                        rs.getBigDecimal("preco")
+                        rs.getBigDecimal("preco"),
+                        rs.getInt("promocao")
                     ));
                 }
             }
@@ -63,7 +65,8 @@ public class ProdutoDAO {
                     rs.getInt("id"),
                     rs.getString("nome"),
                     rs.getInt("quantidade"),
-                    rs.getBigDecimal("preco")
+                    rs.getBigDecimal("preco"),
+                    rs.getInt("promocao")
                 );
                 produtos.add(produto);
             }
@@ -76,11 +79,12 @@ public class ProdutoDAO {
 
     // U
     public void atualizarProduto(Produto produto) {
-        String sql = "UPDATE produto SET nome = ?, quantidade = ?, preco = ? WHERE id = ?";
+        String sql = "UPDATE produto SET nome = ?, quantidade = ?, preco = ?, promocao = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, produto.getNome());
             pstmt.setInt(2, produto.getQuantidade());
             pstmt.setBigDecimal(3, produto.getPreco());
+            pstmt.setInt(4, produto.getPromocao());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

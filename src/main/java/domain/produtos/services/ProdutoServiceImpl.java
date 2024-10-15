@@ -22,6 +22,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
     private final Carrinho carrinho;
 
+
     private final ChangeManager changeManager;
 
     public ProdutoServiceImpl(Connection connection, ChangeManager changeManager) {
@@ -37,19 +38,31 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         TablePrinter.printTable(produtos,
             column1 -> column1.header("ID").with(produto -> produto.getId().toString()),
             column2 -> column2.header("PRODUTO").with(Produto::getNome),
-            column3 -> column3.header("PREÇO (R$)").with(produto -> String.format("R$%.2f", produto.getPreco())),
-            column4 -> column4.header("PROMOCAO").with(produto -> produto.getPromocao()*100 + "%"),
-            column5 -> column5.header("PREÇO (R$) DESC.").with(produto -> produto.calcularPreco().toString())
+            column3 -> column3.header("PREÇO (R$)").with(produto -> String.format("%.2f", produto.getPreco())),
+            column4 -> column4.header("PROMOCAO").with(produto -> produto.getPromocao() + "%"),
+            column5 -> column5.header("PREÇO (R$) DESC.").with(produto -> "%.2f".formatted(produto.calcularPreco()))
         );
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void adicionarProdutoAoCarrinho() {
-        int id = inputProdutoIdDoCarrinho("Informe o ID do produto que vocÇe deseja adicionar (0 para voltar)");
+        int id = BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(0)
+            .read("Fornça o ID do produto que você deseja adicionar ao carrinho (0 para voltar)");
 
         if (id == 0) return;
 
-        Produto produto = carrinho.getProdutoQnt(id).get().left();
+        Optional<Produto> resultado = produtoDAO.buscarPorId(id);
+
+        if (resultado.isEmpty()) {
+            System.out.printf("Não há um produto com o ID %d especificado %n", id);
+            return;
+        } else if (resultado.get().getStatus() == INDISPONIVEL){
+            System.out.printf("O produto de ID %d está indisponível", id);
+            return;
+        }
+
+        Produto produto = resultado.get();
 
         int qnt = inputUnidades("Quantas unidades do produto %s você deseja adicionar?"
                   .formatted(produto.getNome()));
@@ -124,7 +137,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         boolean prosseguir = BetterInputs.getConfirmation("Você deseja prosseguir?", false);
 
         if (prosseguir) {
-            // executa o pagamentoService
+            //
         } else {
             return;
         }
@@ -172,10 +185,9 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
         printProdutosEQuantidade(carrinho.getProdutoQnt());
 
-        System.out.println("Total do carrinho: " + carrinho.calcularPreco() + "R$");
+        System.out.printf("Total do carrinho: R$%.2f", carrinho.calcularPreco());
     }
 
-    // TODO colocar lógica de interação para adicionar promoção
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void addPromocao() {
         int idProduto = BetterInputs.prepareIO().newIntInputReader()
@@ -183,11 +195,6 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
             .read("Informe o ID do produto ao qual você deseja aplicar o desconto (0 para voltar)");
 
         if (idProduto == 0) return;
-
-        int promocao = BetterInputs.prepareIO().newIntInputReader()
-            .withMinVal(1)
-            .withMaxVal(99)
-            .read("Informe o valor da promoção em formato inteiro no intervalo de 1 a 99: ");
 
         Optional<Produto> resultado = produtoDAO.buscarPorId(idProduto);
 
@@ -199,6 +206,11 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
                 resultado.get().getNome(), resultado.get().getId());
             return;
         }
+
+        int promocao = BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(1)
+            .withMaxVal(99)
+            .read("Informe o valor da promoção em formato inteiro no intervalo de 1 a 99: ");
 
         resultado.get().setPromocao(promocao);
         produtoDAO.atualizarProduto(resultado.get());
