@@ -1,8 +1,8 @@
-package infrastructure.apis.bandeiras;
+package infrastructure.apis.banco;
 
 import java.util.Random;
 
-public class BancoBrasilBandeiraAPI implements BandeiraAPI {
+public class BancoBrasilAPI implements BancoAPI {
 
     @Override
     public StatusPagamento solicitarPagemento() {

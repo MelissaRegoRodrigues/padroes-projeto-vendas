@@ -1,9 +1,15 @@
 package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
+import infrastructure.apis.banco.BancoAPI;
 
 public abstract class PagamentoHandler {
     private PagamentoHandler proximo;
+    private BancoAPI bancoAPI;
+
+    public PagamentoHandler(BancoAPI bancoAPI) {
+        this.bancoAPI = bancoAPI;
+    }
 
     public static PagamentoHandler encadear(PagamentoHandler primeiro, PagamentoHandler... cadeia) {
         PagamentoHandler cabeca = primeiro;
@@ -12,6 +18,10 @@ public abstract class PagamentoHandler {
             cabeca = seguinte;
         }
         return primeiro;
+    }
+
+    protected BancoAPI getBancoAPI() {
+        return bancoAPI;
     }
 
     public abstract boolean processar(Pagamento pagamento);
@@ -23,4 +33,7 @@ public abstract class PagamentoHandler {
         }
         return proximo.processar(pagamento);
     }
+
+     public abstract void validarDadosBasicos(Pagamento pagamento) throws RuntimeException;
+
 }

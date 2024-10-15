@@ -1,4 +1,4 @@
-package infrastructure.apis.bandeiras;
+package infrastructure.apis.banco;
 
 public enum StatusPagamento {
     PENDENTE,

@@ -1,33 +1,36 @@
 package domain.pagamentos.validators;
 
-import infrastructure.apis.bandeiras.BandeiraAPI;
-import infrastructure.apis.bandeiras.StatusPagamento;
+import infrastructure.apis.banco.BancoAPI;
+import infrastructure.apis.banco.StatusPagamento;
 import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosCartaoCredito;
 import infrastructure.utils.TeatroUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
 
-    private BandeiraAPI bandeiraAPI;
-
-    /* TODO provavelmente cada bandeira se tornará um handler, mas mudei apenas pra não dar
-     * problema na hora de compilar*/
-    public PagamentoCartaoCreditoHandler(BandeiraAPI bandeiraAPI) {
-        this.bandeiraAPI = bandeiraAPI;
+    public PagamentoCartaoCreditoHandler(BancoAPI bancoAPI) {
+        super(bancoAPI);
     }
 
     @Override
     public boolean processar(Pagamento pagamento) {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
-            System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais.");
+            validarDadosBasicos(pagamento);
+            System.out.println();
+            System.out.printf("Parcelas serão de R$ %.2f", calcularParcelas(pagamento));
+            System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais...");
+            System.out.println();
 
             TeatroUtils.esperar(5000);
-            StatusPagamento status = bandeiraAPI.solicitarPagemento();
+            StatusPagamento status = getBancoAPI().solicitarPagemento();
             while (status == StatusPagamento.PENDENTE) {
                 TeatroUtils.esperar(5000);
                 System.out.println("O seu pagamento está demorando mais do que o esperado...");
                 TeatroUtils.esperar(3000);
-                status = bandeiraAPI.solicitarPagemento();
+                status = getBancoAPI().solicitarPagemento();
             }
 
             if (status == StatusPagamento.ACEITO) {
@@ -42,5 +45,31 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
 
         }
         return checarProximo(pagamento);
+
+    }
+
+    @Override
+    public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
+        DadosCartaoCredito cartao = (DadosCartaoCredito) pagamento.getDadosPagamento();
+        if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+            throw new RuntimeException("Valor deve ser maior que zero");
+        }
+        if (!cartao.getNumeroCartao().matches("\\d{16}")) {
+            throw new RuntimeException("Número do cartão de crédito inválido!");
+        }
+        if (!cartao.getCodigoSeguranca().matches("\\d{3}")) {
+            throw new RuntimeException("Código de segurança inválido!");
+        }
+        if (cartao.getQuantidadeParcelas() < 0) {
+            throw new RuntimeException("Quantidade de parcelas deve ser maior que zero!");
+        }
+
+    }
+
+    private BigDecimal calcularParcelas(Pagamento pagamento){
+        int quantidadeParcelas = ((DadosCartaoCredito) pagamento.getDadosPagamento()).getQuantidadeParcelas();
+        BigDecimal valorTotal = pagamento.getValor();
+
+        return valorTotal.divide(new BigDecimal(quantidadeParcelas), RoundingMode.HALF_UP);
     }
 }
