@@ -1,8 +1,8 @@
 package presentation;
 
+import domain.pagamentos.services.PagamentoServiceImpl;
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
-import infrastructure.apis.banco.BancoBrasilBandeiraAPI;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ public class Main {
 
     private static List<Produto> produtos = new ArrayList<>();
     private static Carrinho carrinho = new Carrinho();
+    private static PagamentoServiceImpl pagamentoService = new PagamentoServiceImpl();
 
     // TODO Mudei para injear a API das bandeiras, mas provavelmente cada handler lidará com as bandeiras
 
@@ -183,8 +184,8 @@ public class Main {
     private static void comprarProdutos(Scanner sc) {
         System.out.println("Resumo da compra:");
         verCarrinho();
-
         BigDecimal total = carrinho.calcularPreco();
+        pagamentoService.pagar(total);
 
     }
 

@@ -8,6 +8,10 @@ public abstract class PagamentoHandler {
     private PagamentoHandler proximo;
     private BancoAPI bancoAPI;
 
+    public PagamentoHandler(BancoAPI bancoAPI) {
+        this.bancoAPI = bancoAPI;
+    }
+
     public static PagamentoHandler encadear(PagamentoHandler primeiro, PagamentoHandler... cadeia) {
         PagamentoHandler cabeca = primeiro;
         for (PagamentoHandler seguinte : cadeia) {
@@ -15,6 +19,10 @@ public abstract class PagamentoHandler {
             cabeca = seguinte;
         }
         return primeiro;
+    }
+
+    protected BancoAPI getBancoAPI() {
+        return bancoAPI;
     }
 
     public abstract boolean processar(Pagamento pagamento);

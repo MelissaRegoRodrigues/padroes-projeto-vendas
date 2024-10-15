@@ -6,10 +6,9 @@ import infrastructure.apis.banco.BancoAPI;
 
 public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
 
-    BancoAPI bandeiraAPI;
 
-    public PagamentoCartaoDebitoHandler() {
-        this.bandeiraAPI = bandeiraAPI;
+    public PagamentoCartaoDebitoHandler(BancoAPI bancoAPI) {
+        super(bancoAPI);
     }
 
     @Override

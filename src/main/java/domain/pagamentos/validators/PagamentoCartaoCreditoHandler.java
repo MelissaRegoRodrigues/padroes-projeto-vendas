@@ -8,27 +8,25 @@ import infrastructure.utils.TeatroUtils;
 
 public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
 
-    private BancoAPI bandeiraAPI;
-
-    /* TODO provavelmente cada bandeira se tornará um handler, mas mudei apenas pra não dar
-     * problema na hora de compilar*/
-    public PagamentoCartaoCreditoHandler() {
-        this.bandeiraAPI = bandeiraAPI;
+    public PagamentoCartaoCreditoHandler(BancoAPI bancoAPI) {
+        super(bancoAPI);
     }
 
     @Override
     public boolean processar(Pagamento pagamento) {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
             validarDadosBasicos(pagamento);
+            System.out.println();
             System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais...");
+            System.out.println();
 
             TeatroUtils.esperar(5000);
-            StatusPagamento status = bandeiraAPI.solicitarPagemento();
+            StatusPagamento status = getBancoAPI().solicitarPagemento();
             while (status == StatusPagamento.PENDENTE) {
                 TeatroUtils.esperar(5000);
                 System.out.println("O seu pagamento está demorando mais do que o esperado...");
                 TeatroUtils.esperar(3000);
-                status = bandeiraAPI.solicitarPagemento();
+                status = getBancoAPI().solicitarPagemento();
             }
 
             if (status == StatusPagamento.ACEITO) {

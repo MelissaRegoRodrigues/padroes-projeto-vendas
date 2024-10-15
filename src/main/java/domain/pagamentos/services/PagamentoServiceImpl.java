@@ -15,12 +15,12 @@ import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class PagamentoServiceImpl implements PagamentoService {
-    private PagamentoHandler handlers = PagamentoHandler.encadear(
-            new PagamentoCartaoCreditoHandler(),
-            new PagamentoCartaoDebitoHandler(),
-            new PagamentoPixHandler());
+    private final PagamentoHandler handlers = PagamentoHandler.encadear(
+            new PagamentoCartaoCreditoHandler(new BancoBrasilAPI()),
+            new PagamentoCartaoDebitoHandler(new BancoBrasilAPI()),
+            new PagamentoPixHandler(new BancoBrasilAPI()));
 
-    private Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
 
     @Override
     public void pagar(BigDecimal valor) {

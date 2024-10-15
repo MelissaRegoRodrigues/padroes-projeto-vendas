@@ -2,6 +2,7 @@ package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosPix;
+import infrastructure.apis.banco.BancoAPI;
 
 import java.util.regex.Pattern;
 
@@ -10,6 +11,10 @@ public class PagamentoPixHandler extends PagamentoHandler {
     private static final String CNPJ_REGEX = "^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}$|^\\d{14}$";
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private static final String TELEFONE_REGEX = "^\\+?\\d{0,2}\\s?\\(?\\d{2}\\)?\\s?\\d{4,5}-?\\d{4}$|^\\d{8,13}$";
+
+    public PagamentoPixHandler(BancoAPI bancoAPI) {
+        super(bancoAPI);
+    }
 
 
     @Override

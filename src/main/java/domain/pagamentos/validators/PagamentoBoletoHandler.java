@@ -3,10 +3,15 @@ package domain.pagamentos.validators;
 import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosBoleto;
 import domain.pagamentos.models.dados.DadosPagamento;
+import infrastructure.apis.banco.BancoAPI;
 
 import java.time.LocalDateTime;
 
 public class PagamentoBoletoHandler extends PagamentoHandler {
+
+    protected PagamentoBoletoHandler(BancoAPI bancoAPI) {
+        super(bancoAPI);
+    }
 
     @Override
     public boolean processar(Pagamento pagamento) {
@@ -15,6 +20,7 @@ public class PagamentoBoletoHandler extends PagamentoHandler {
             System.out.println("Processando o pagamento com boleto no valor de " + pagamento.getValor() + " reais.");
             return true;
         }
+
 
         return checarProximo(pagamento);
     }

@@ -12,11 +12,11 @@ public class EstrategiaPagamentoCartaoDebito implements EstrategiaPagamento {
         Scanner scanner = new Scanner(System.in);
         DadosCartaoCredito dados = new DadosCartaoCredito();
 
-        System.out.println("Número cartão de crédito: ");
+        System.out.println("Número cartão de Débito: ");
         dados.setNumeroCartao(scanner.next());
         System.out.println("Código de segurança: ");
         dados.setCodigoSeguranca(scanner.next());
-        System.out.println("Valor total será de R$ " + Math.round(pagamento.getValor() * 100) / 100.0);
+        System.out.printf("Valor total será de R$ %.2f", pagamento.getValor());
 
         pagamento.setDadosPagamento(dados);
     }
