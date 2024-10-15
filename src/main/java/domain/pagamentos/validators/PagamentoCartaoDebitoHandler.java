@@ -4,6 +4,8 @@ import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosCartaoDebito;
 import infrastructure.apis.banco.BancoAPI;
 
+import java.math.BigDecimal;
+
 public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
 
 
@@ -23,6 +25,9 @@ public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
     @Override
     public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoDebito cartao) {
+            if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+                throw new RuntimeException("Valor deve ser maior que zero");
+            }
             if (!cartao.getNumeroCartao().matches("\\d{16}")) {
                 throw new RuntimeException("Número do cartão de crédito inválido!");
             }

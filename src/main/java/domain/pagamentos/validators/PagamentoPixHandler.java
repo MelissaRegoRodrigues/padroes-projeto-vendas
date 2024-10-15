@@ -4,6 +4,8 @@ import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosPix;
 import infrastructure.apis.banco.BancoAPI;
 
+import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class PagamentoPixHandler extends PagamentoHandler {
@@ -37,6 +39,9 @@ public class PagamentoPixHandler extends PagamentoHandler {
                         !Pattern.matches(EMAIL_REGEX, chavePix) ||
                         !Pattern.matches(TELEFONE_REGEX, chavePix)) {
             throw new RuntimeException("Chave pix inválida");
+        }
+        if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+            throw new RuntimeException("Valor deve ser maior que zero");
         }
 
 

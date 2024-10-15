@@ -6,6 +6,9 @@ import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosCartaoCredito;
 import infrastructure.utils.TeatroUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
 
     public PagamentoCartaoCreditoHandler(BancoAPI bancoAPI) {
@@ -17,6 +20,7 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
             validarDadosBasicos(pagamento);
             System.out.println();
+            System.out.printf("Parcelas serão de R$ %.2f", calcularParcelas(pagamento));
             System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais...");
             System.out.println();
 
@@ -47,6 +51,9 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
     @Override
     public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
         DadosCartaoCredito cartao = (DadosCartaoCredito) pagamento.getDadosPagamento();
+        if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+            throw new RuntimeException("Valor deve ser maior que zero");
+        }
         if (!cartao.getNumeroCartao().matches("\\d{16}")) {
             throw new RuntimeException("Número do cartão de crédito inválido!");
         }
@@ -57,5 +64,12 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
             throw new RuntimeException("Quantidade de parcelas deve ser maior que zero!");
         }
 
+    }
+
+    private BigDecimal calcularParcelas(Pagamento pagamento){
+        int quantidadeParcelas = ((DadosCartaoCredito) pagamento.getDadosPagamento()).getQuantidadeParcelas();
+        BigDecimal valorTotal = pagamento.getValor();
+
+        return valorTotal.divide(new BigDecimal(quantidadeParcelas), RoundingMode.HALF_UP);
     }
 }
