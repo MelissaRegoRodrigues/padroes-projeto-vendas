@@ -14,7 +14,6 @@ import utils.terminal.tabelas.TablePrinter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.*;
-
 import static domain.produtos.models.Estoque.INDISPONIVEL;
 
 public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
@@ -48,7 +47,6 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         );
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void adicionarProdutoAoCarrinho() {
         int id = BetterInputs.prepareIO().newIntInputReader()
             .withMinVal(0)
@@ -192,7 +190,6 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         System.out.printf("Total do carrinho: R$%.2f %n", carrinho.calcularPreco());
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void addPromocao() {
         int idProduto = BetterInputs.prepareIO().newIntInputReader()
             .withMinVal(0)

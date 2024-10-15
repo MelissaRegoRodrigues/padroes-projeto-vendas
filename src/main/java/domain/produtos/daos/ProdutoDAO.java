@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class ProdutoDAO {
 
-    private Connection connection;
+    private final Connection connection;
 
     public ProdutoDAO(Connection connection) {
         this.connection = connection;
