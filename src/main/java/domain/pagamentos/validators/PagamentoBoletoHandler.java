@@ -2,9 +2,9 @@ package domain.pagamentos.validators;
 
 import domain.pagamentos.models.Pagamento;
 import domain.pagamentos.models.dados.DadosBoleto;
-import domain.pagamentos.models.dados.DadosPagamento;
 import infrastructure.apis.banco.BancoAPI;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class PagamentoBoletoHandler extends PagamentoHandler {
@@ -28,6 +28,9 @@ public class PagamentoBoletoHandler extends PagamentoHandler {
     @Override
     public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
         DadosBoleto boleto = (DadosBoleto) pagamento.getDadosPagamento();
+        if(pagamento.getValor().compareTo(BigDecimal.ZERO) > 0){
+            throw new RuntimeException("Valor deve ser maior que zero");
+        }
         if (boleto.getLinkBoleto() == null) {
             throw new RuntimeException("Link Boleto deve ser definido");
         }
