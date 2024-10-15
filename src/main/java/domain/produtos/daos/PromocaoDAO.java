@@ -5,6 +5,7 @@ import domain.produtos.models.Produto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PromocaoDAO {
 
@@ -34,7 +35,7 @@ public class PromocaoDAO {
             pstmt.setInt(1, promocaoId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    Produto produto = new ProdutoDAO(connection).buscarProdutoPorCodigo(rs.getInt("produto_codigo"));
+                    Produto produto = new ProdutoDAO(connection).buscarPorId(rs.getInt("produto_codigo")).get();
                     return new Promocao(
                             rs.getInt("promocaoId"),
                             rs.getDouble("desconto"),
@@ -55,11 +56,11 @@ public class PromocaoDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Produto produto = new ProdutoDAO(connection).buscarProdutoPorCodigo(rs.getInt("produto_codigo"));
+                Optional<Produto> produto = new ProdutoDAO(connection).buscarPorId(rs.getInt("produto_codigo"));
                 Promocao promocao = new Promocao(
                         rs.getInt("promocaoId"),
                         rs.getDouble("desconto"),
-                        produto,
+                    produto.orElse(null),
                         rs.getTimestamp("tempoInicio").toLocalDateTime(),
                         rs.getTimestamp("tempoFim").toLocalDateTime()
                 );

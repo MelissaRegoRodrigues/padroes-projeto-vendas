@@ -5,6 +5,7 @@ import domain.produtos.models.Estoque;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProdutoDAO {
 
@@ -29,32 +30,37 @@ public class ProdutoDAO {
     }
 
     // R
-    public Produto buscarProdutoPorCodigo(Integer id) throws SQLException {
+    public Optional<Produto> buscarPorId(Integer id) {
         String sql = "SELECT * FROM produto WHERE id = ?";
+
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Produto(
-                            rs.getInt("id"),
-                            rs.getString("nome"),
-                            rs.getString("descricao"),
-                            rs.getInt("quantidade"),
-                            rs.getBigDecimal("preco"),
-                            Estoque.valueOf(rs.getString("status").toUpperCase()),
-                            null  // você precisaria buscar a promoção separadamente
-                    );
+                    return Optional.of(new Produto(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("descricao"),
+                        rs.getInt("quantidade"),
+                        rs.getBigDecimal("preco"),
+                        Estoque.valueOf(rs.getString("status").toUpperCase()),
+                        null // você precisaria buscar a promoção separadamente
+                    ));
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return null;
+
+        return Optional.empty();
     }
 
-    public List<Produto> listarTodosProdutos() throws SQLException {
+    public List<Produto> listarTodosProdutos() {
         List<Produto> produtos = new ArrayList<>();
         String sql = "SELECT * FROM produto";
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+
+        try (Statement stmt = connection.createStatement()) {
+             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
                 Produto produto = new Produto(
@@ -68,12 +74,15 @@ public class ProdutoDAO {
                 );
                 produtos.add(produto);
             }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
         }
+
         return produtos;
     }
 
     // U
-    public void atualizarProduto(Produto produto) throws SQLException {
+    public void atualizarProduto(Produto produto) {
         String sql = "UPDATE produto SET nome = ?, descricao = ?, quantidade = ?, preco = ?, status = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, produto.getNome());
@@ -83,6 +92,8 @@ public class ProdutoDAO {
             pstmt.setString(5, produto.getStatus().name());
             pstmt.setInt(6, produto.getId());
             pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

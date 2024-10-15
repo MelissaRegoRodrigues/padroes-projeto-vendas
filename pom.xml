@@ -26,6 +26,16 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>${sqlite.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.beryx</groupId>
+      <artifactId>text-io</artifactId>
+      <version>3.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.freva</groupId>
+      <artifactId>ascii-table</artifactId>
+      <version>1.8.0</version>
+    </dependency>
   </dependencies>
 
 </project>

@@ -31,11 +31,10 @@ public class PagamentoPixHandler extends PagamentoHandler {
     public void validarDadosBasicos(Pagamento pagamento) throws RuntimeException {
         String chavePix = ((DadosPix) pagamento.getDadosPagamento()).getChavePix();
 
-        if (
-                !Pattern.matches(CPF_REGEX, chavePix) ||
-                        !Pattern.matches(CNPJ_REGEX, chavePix) ||
-                        !Pattern.matches(EMAIL_REGEX, chavePix) ||
-                        !Pattern.matches(TELEFONE_REGEX, chavePix)) {
+        if (!Pattern.matches(CPF_REGEX, chavePix) &&
+            !Pattern.matches(CNPJ_REGEX, chavePix) &&
+            !Pattern.matches(EMAIL_REGEX, chavePix) &&
+            !Pattern.matches(TELEFONE_REGEX, chavePix)) {
             throw new RuntimeException("Chave pix inválida");
         }
 

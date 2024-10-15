@@ -3,6 +3,8 @@ package presentation;
 import domain.pagamentos.services.PagamentoServiceImpl;
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
+import org.beryx.textio.TextIO;
+import org.beryx.textio.TextIoFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -100,10 +102,6 @@ public class Main {
     }
 
     private static void verTodosProdutos() {
-        System.out.println("Produtos disponíveis:");
-        for (Produto produto : produtos) {
-            System.out.println(produto.getId() + " - " + produto.getNome() + ": " + produto.getDescricao() + " - " + produto.getPreco() + "R$");
-        }
     }
 
     private static void adicionarProdutoAoCarrinho(Scanner sc) {
@@ -135,50 +133,11 @@ public class Main {
     }
 
     private static void verCarrinho() {
-        System.out.println("QUANTIDADE | PRODUTO");
-
-        if (carrinho.getProdutos().isEmpty()) {
-            System.out.println("Carrinho está vazio.");
-        } else {
-            for (Map.Entry<Produto, Integer> entry : carrinho.getProdutos().entrySet()) {
-                Produto produto = entry.getKey();
-                int quantidade = entry.getValue();
-                System.out.println(quantidade + " - " + produto.getNome() + ": " + produto.getPreco() + "R$ (por unidade)");
-            }
-            System.out.println("Total do carrinho: " + carrinho.calcularPreco() + "R$");
-        }
+        // TODO
     }
 
     private static void removerProdutoDoCarrinho(Scanner sc) {
-        if (carrinho.getProdutos().isEmpty()) {
-            System.out.println("Seu carrinho está vazio!");
-            return;
-        }
-        System.out.println("Digite o código do produto para remover do carrinho:");
-        int codigo = Integer.parseInt(sc.nextLine());
 
-        Produto produtoParaRemover = null;
-        for (Produto produto : produtos) {
-            if (produto.getId() == codigo) {
-                produtoParaRemover = produto;
-                break;
-            }
-        }
-
-        if (produtoParaRemover != null && carrinho.getProdutos().containsKey(produtoParaRemover)) {
-            System.out.println("Produto selecionado: " + produtoParaRemover.getNome());
-            System.out.println("Digite a quantidade que deseja remover:");
-            int quantidade = Integer.parseInt(sc.nextLine());
-
-            if (quantidade > 0 || quantidade <= carrinho.getProdutos().get(produtoParaRemover)) {
-                carrinho.removerProduto(produtoParaRemover, quantidade);
-                System.out.println(quantidade + "x " + produtoParaRemover.getNome() + " removido(s) do carrinho.");
-            } else {
-                System.out.println("Quantidade inválida.");
-            }
-        } else {
-            System.out.println("Produto não encontrado no carrinho.");
-        }
     }
 
     private static void comprarProdutos(Scanner sc) {
