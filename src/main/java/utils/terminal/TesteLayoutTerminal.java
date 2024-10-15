@@ -19,10 +19,10 @@ public class TesteLayoutTerminal {
         Carrinho carrinho = new Carrinho();
 
         List<Produto> produtos = Arrays.asList(
-            new Produto(1, "Banana", "Fruta boa", 5, new BigDecimal(555555555555555555.55), Estoque.DISPONIVEL, null)
+            new Produto(1, "Banana", 5, new BigDecimal(555555555555555555.55), null)
         );
 
-        produtos.get(0).setPromocao(new Promocao(1, 0.2, produtos.get(0), LocalDateTime.now(), LocalDateTime.now()));
+        produtos.get(0).setPromocao(new Promocao(1, 0.2, LocalDateTime.now(), LocalDateTime.now()));
 
         carrinho.adicionarProduto(produtos.get(0), produtos.get(0).getQuantidade());
 

@@ -3,26 +3,28 @@ package presentation;
 import domain.pagamentos.services.PagamentoServiceImpl;
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
+import domain.produtos.services.ProdutoServiceImpl;
+import infrastructure.database.SQLiteDBConnection;
+import infrastructure.notifications.changemanagers.ScheduledChangeManager;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.TextIoFactory;
+import org.sqlite.SQLiteConnection;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
 
 public class Main {
 
-    private static List<Produto> produtos = new ArrayList<>();
-    private static Carrinho carrinho = new Carrinho();
     private static PagamentoServiceImpl pagamentoService = new PagamentoServiceImpl();
-
-    // TODO Mudei para injear a API das bandeiras, mas provavelmente cada handler lidará com as bandeiras
+    private static ProdutoServiceImpl produtoService = new ProdutoServiceImpl(
+        SQLiteDBConnection.getConnection(),
+        new ScheduledChangeManager(Executors.newScheduledThreadPool(1), Executors.newFixedThreadPool(5)));
 
     public static void main(String[] args) {
-        popularProdutos();
-
         Scanner sc = new Scanner(System.in);
         String opcao;
         boolean continuar = true;
@@ -78,13 +80,13 @@ public class Main {
                     verTodosProdutos();
                     break;
                 case "2":
-                    adicionarProdutoAoCarrinho(sc);
+                    adicionarProdutoAoCarrinho();
                     break;
                 case "3":
                     verCarrinho();
                     break;
                 case "4":
-                    removerProdutoDoCarrinho(sc);
+                    removerProdutoDoCarrinho();
                     break;
                 case "5":
                     comprarProdutos(sc);
@@ -102,56 +104,23 @@ public class Main {
     }
 
     private static void verTodosProdutos() {
+        produtoService.mostrarTodosProdutos();
     }
 
-    private static void adicionarProdutoAoCarrinho(Scanner sc) {
-        System.out.println("Digite o código do produto para adicionar ao carrinho:");
-        int codigo = Integer.parseInt(sc.nextLine());
-
-        Produto produtoEscolhido = null;
-        for (Produto produto : produtos) {
-            if (produto.getId() == codigo) {
-                produtoEscolhido = produto;
-                break;
-            }
-        }
-
-        if (produtoEscolhido != null) {
-            System.out.println("Produto escolhido: " + produtoEscolhido.getNome());
-            System.out.println("Digite a quantidade que deseja adicionar:");
-            int quantidade = Integer.parseInt(sc.nextLine());
-
-            if (quantidade > 0) {
-                carrinho.adicionarProduto(produtoEscolhido, quantidade);
-                System.out.println(quantidade + "x " + produtoEscolhido.getNome() + " adicionado(s) ao carrinho.");
-            } else {
-                System.out.println("Quantidade inválida.");
-            }
-        } else {
-            System.out.println("Produto não encontrado.");
-        }
+    private static void adicionarProdutoAoCarrinho() {
+        produtoService.adicionarProdutoAoCarrinho();
     }
 
     private static void verCarrinho() {
-        // TODO
+        produtoService.verCarrinho();
     }
 
-    private static void removerProdutoDoCarrinho(Scanner sc) {
-
+    private static void removerProdutoDoCarrinho() {
+        produtoService.removerProdutoDoCarrinho();
     }
 
     private static void comprarProdutos(Scanner sc) {
-        System.out.println("Resumo da compra:");
-        verCarrinho();
-        BigDecimal total = carrinho.calcularPreco();
-        pagamentoService.pagar(total);
-
-    }
-
-    private static void popularProdutos() {
-        produtos.add(new Produto(1, "Smartphone", "Celular com 128GB", 10, new BigDecimal("2500.00"), null, null));
-        produtos.add(new Produto(2, "Notebook", "Notebook Gamer", 5, new BigDecimal("4500.00"), null, null));
-        produtos.add(new Produto(3, "Fone de Ouvido", "Fone Bluetooth", 20, new BigDecimal("200.00"), null, null));
+        produtoService.finalizarCompra();
     }
 
 }

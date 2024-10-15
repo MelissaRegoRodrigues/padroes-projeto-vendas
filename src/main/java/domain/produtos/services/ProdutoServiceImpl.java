@@ -22,18 +22,19 @@ import static domain.produtos.models.Estoque.INDISPONIVEL;
 
 public class ProdutoServiceImpl implements Subject<Promocao> {
 
-    private ProdutoDAO produtoDAO;
+    private final ProdutoDAO produtoDAO;
 
     private PromocaoDAO promocaoDAO;
 
     private Carrinho carrinho;
 
-    private ChangeManager changeManager;
+    private final ChangeManager changeManager;
 
     public ProdutoServiceImpl(Connection connection, ChangeManager changeManager) {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
         this.changeManager = changeManager;
     }
+
 
     public void mostrarTodosProdutos() {
         List<Produto> produtos = produtoDAO.listarTodosProdutos();
@@ -47,17 +48,37 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
         );
     }
 
-    // TODO implementar a interação para adição de produtos no carrinho
-    public void addProdutoToCarrinho(Produto produto, int quantidade) {
-        Optional<Produto> resultado = produtoDAO.buscarPorId(produto.getId());
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public void adicionarProdutoAoCarrinho() {
+        int id = inputProdutoId("Informe o ID do produto que vocÇe deseja adicionar (0 para voltar)");
 
-        if (resultado.isPresent() && produto.getStatus() == DISPONIVEL) {
-            carrinho.adicionarProduto(produto, quantidade);
-            System.out.println("Produto adicionado ao carrinho: " + produto.getNome());
-            return;
-        }
+        if (id == 0) return;
 
-        System.out.println("Produto INDISPONÍVEL.");
+        Produto produto = carrinho.getProdutoQnt(id).get().left();
+
+        int qnt = inputUnidades("Quantas unidades do produto %s você deseja adicionar?"
+                  .formatted(produto.getNome()));
+
+        int novaQnt = carrinho.adicionarProduto(produto, qnt);
+        System.out.printf("%d unidades do produto %s foram adicionadas ao carrinho%n", qnt, produto.getNome());
+        System.out.printf("Agora há %d unidades", novaQnt);
+    }
+
+    private int inputProdutoId(String prompt) {
+        return BetterInputs.prepareIO().newIntInputReader()
+            .withValueChecker((value, name) -> {
+                // Retorno nulo significa que não é para lançar erro
+                if (value == 0) return null;
+                if (carrinho.getProdutoQnt(value).isEmpty()) return List.of("Nenhum produto com o ID especificado");
+                return null;
+            })
+            .read(prompt);
+    }
+
+    private int inputUnidades(String prompt) {
+        return BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(1)
+            .read(prompt);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -67,24 +88,18 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
             return;
         }
 
-        int id = BetterInputs.prepareIO().newIntInputReader()
-            .withValueChecker((value, name) -> {
-                // Retorno nulo significa que não é para lançar erro
-                if (value == 0) return null;
-                if (carrinho.getProdutoQnt(value).isEmpty()) return List.of("Nenhum produto com o ID especificado");
-                return null;
-            })
-            .read("Informe o ID do produto que você deseja remover (0 para voltar):");
+        int id = inputProdutoId("Informe o ID do produto que você deseja remover (0 para voltar):");
 
         if (id == 0) return;
 
         Produto produto = carrinho.getProdutoQnt(id).get().left();
 
-        int qnt = BetterInputs.prepareIO().newIntInputReader()
-            .withMinVal(1)
-            .read("Quantas unidades do produto %s você deseja remover?", produto.getNome());
+        int qnt = inputUnidades("Quantas unidades do produto %s você deseja remover?"
+                  .formatted(produto.getNome()));
 
-        carrinho.removerProduto(produto, qnt);
+        int novaQtd = carrinho.removerProduto(produto, qnt);
+        System.out.printf("%d unidades do produto %s foram removidas do carrinho%n", qnt, produto.getNome());
+        System.out.printf("Há %d unidades restantes%n", novaQtd);
     }
 
     public void finalizarCompra() {

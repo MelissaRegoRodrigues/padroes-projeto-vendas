@@ -16,32 +16,29 @@ public class PromocaoDAO {
     }
 
     // C
-    public void adicionarPromocao(Promocao promocao) throws SQLException {
-        String sql = "INSERT INTO promocao (promocaoId, desconto, produto_codigo, tempoInicio, tempoFim) VALUES (?, ?, ?, ?, ?)";
+    public void adicionarPromocao(Promocao promocao, int idProduto) throws SQLException {
+        String sql = "INSERT INTO promocao (desconto, produto_id, tempoInicio, tempoFim) VALUES (?, ?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setInt(1, promocao.getId());
-            pstmt.setDouble(2, promocao.getDesconto());
-            pstmt.setInt(3, promocao.getProduto().getId());
-            pstmt.setTimestamp(4, Timestamp.valueOf(promocao.getTempoInicio()));
-            pstmt.setTimestamp(5, Timestamp.valueOf(promocao.getTempoFim()));
+            pstmt.setDouble(1, promocao.getDesconto());
+            pstmt.setInt(2, idProduto);
+            pstmt.setTimestamp(3, Timestamp.valueOf(promocao.getTempoInicio()));
+            pstmt.setTimestamp(4, Timestamp.valueOf(promocao.getTempoFim()));
             pstmt.executeUpdate();
         }
     }
 
     // R
     public Promocao buscarPromocaoPorId(Integer promocaoId) throws SQLException {
-        String sql = "SELECT * FROM promocao WHERE promocaoId = ?";
+        String sql = "SELECT * FROM promocao WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, promocaoId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    Produto produto = new ProdutoDAO(connection).buscarPorId(rs.getInt("produto_codigo")).get();
                     return new Promocao(
-                            rs.getInt("promocaoId"),
-                            rs.getDouble("desconto"),
-                            produto,
-                            rs.getTimestamp("tempoInicio").toLocalDateTime(),
-                            rs.getTimestamp("tempoFim").toLocalDateTime()
+                        rs.getInt("promocaoId"),
+                        rs.getDouble("desconto"),
+                        rs.getTimestamp("tempoInicio").toLocalDateTime(),
+                        rs.getTimestamp("tempoFim").toLocalDateTime()
                     );
                 }
             }
@@ -60,7 +57,6 @@ public class PromocaoDAO {
                 Promocao promocao = new Promocao(
                         rs.getInt("promocaoId"),
                         rs.getDouble("desconto"),
-                    produto.orElse(null),
                         rs.getTimestamp("tempoInicio").toLocalDateTime(),
                         rs.getTimestamp("tempoFim").toLocalDateTime()
                 );
@@ -72,20 +68,19 @@ public class PromocaoDAO {
 
     // U
     public void atualizarPromocao(Promocao promocao) throws SQLException {
-        String sql = "UPDATE promocao SET desconto = ?, produto_codigo = ?, tempoInicio = ?, tempoFim = ? WHERE promocaoId = ?";
+        String sql = "UPDATE promocao SET desconto = ?, tempoInicio = ?, tempoFim = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setDouble(1, promocao.getDesconto());
-            pstmt.setInt(2, promocao.getProduto().getId());
-            pstmt.setTimestamp(3, Timestamp.valueOf(promocao.getTempoInicio()));
-            pstmt.setTimestamp(4, Timestamp.valueOf(promocao.getTempoFim()));
-            pstmt.setInt(5, promocao.getId());
+            pstmt.setTimestamp(2, Timestamp.valueOf(promocao.getTempoInicio()));
+            pstmt.setTimestamp(3, Timestamp.valueOf(promocao.getTempoFim()));
+            pstmt.setInt(4, promocao.getId());
             pstmt.executeUpdate();
         }
     }
 
     // D
     public void deletarPromocao(int promocaoId) throws SQLException {
-        String sql = "DELETE FROM promocao WHERE promocaoId = ?";
+        String sql = "DELETE FROM promocao WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, promocaoId);
             pstmt.executeUpdate();

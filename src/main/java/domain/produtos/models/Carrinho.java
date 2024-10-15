@@ -7,9 +7,9 @@ import java.util.function.BiConsumer;
 
 public class Carrinho {
 
-    private Map<Produto, Integer> produtoQnt;
+    private final Map<Produto, Integer> produtoQnt;
 
-    private Map<Integer, Produto> idProduto;
+    private final Map<Integer, Produto> idProduto;
 
     public Carrinho() {
         this.produtoQnt = new HashMap<>();
@@ -17,15 +17,19 @@ public class Carrinho {
     }
 
 
-    public void adicionarProduto(Produto produto, int quantidade) {
+    public int adicionarProduto(Produto produto, int quantidade) {
+        if (quantidade <= 0) throw new IllegalArgumentException("Quantidade deve ser maior que zero");
+
         Integer previousValue = produtoQnt.put(produto, produtoQnt.getOrDefault(produto, 0) + quantidade);
 
         if (previousValue == null) {
             idProduto.put(produto.getId(), produto);
         }
+
+        return produtoQnt.get(produto);
     }
 
-    public void removerProduto(Produto produto, int quantidade) {
+    public int removerProduto(Produto produto, int quantidade) {
         Integer newValue = produtoQnt.computeIfPresent(produto, (k, v) ->
             (v-quantidade) == 0 ? null : (v-quantidade)
         );
@@ -33,6 +37,8 @@ public class Carrinho {
         if (newValue == null) {
             idProduto.remove(produto.getId());
         }
+
+        return Objects.requireNonNullElse(newValue, 0);
     }
 
     public void removerProduto(int id, int quantidade) {
