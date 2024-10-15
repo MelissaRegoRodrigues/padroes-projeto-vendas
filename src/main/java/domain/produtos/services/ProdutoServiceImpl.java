@@ -47,6 +47,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
         );
     }
 
+    // TODO implementar a interação para adição de produtos no carrinho
     public void addProdutoToCarrinho(Produto produto, int quantidade) {
         Optional<Produto> resultado = produtoDAO.buscarPorId(produto.getId());
 
@@ -66,8 +67,9 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
             return;
         }
 
-        int id = BetterIO.prepareIO().newIntInputReader()
+        int id = BetterInputs.prepareIO().newIntInputReader()
             .withValueChecker((value, name) -> {
+                // Retorno nulo significa que não é para lançar erro
                 if (value == 0) return null;
                 if (carrinho.getProdutoQnt(value).isEmpty()) return List.of("Nenhum produto com o ID especificado");
                 return null;
@@ -78,7 +80,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
 
         Produto produto = carrinho.getProdutoQnt(id).get().left();
 
-        int qnt = BetterIO.prepareIO().newIntInputReader()
+        int qnt = BetterInputs.prepareIO().newIntInputReader()
             .withMinVal(1)
             .read("Quantas unidades do produto %s você deseja remover?", produto.getNome());
 
@@ -121,7 +123,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
     }
 
     private void printResumoCarrinho(List<Pair<Produto, Integer>> disponiveis, List<Produto> indisponiveis,
-                                BigDecimal total) {
+                                     BigDecimal total) {
         BetterPrint.printWithBorder("RESUMO DA COMPRA", "=");
         BetterPrint.printWithBorder("Disponíveis", "=");
         printProdutosEQuantidade(disponiveis);
@@ -163,6 +165,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
         System.out.println("Total do carrinho: " + carrinho.calcularPreco() + "R$");
     }
 
+    // TODO colocar lógica de interação para adicionar promoção
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void addPromocao(Integer idProduto, Promocao promocao) {
 
