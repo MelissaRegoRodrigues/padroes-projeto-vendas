@@ -1,11 +1,8 @@
 package utils.terminal;
 
 import domain.produtos.models.Carrinho;
-import domain.produtos.models.Estoque;
 import domain.produtos.models.Produto;
 import domain.produtos.models.Promocao;
-import org.beryx.textio.TextIO;
-import org.beryx.textio.system.SystemTextTerminal;
 import utils.terminal.tabelas.TablePrinter;
 
 import java.math.BigDecimal;
@@ -42,13 +39,10 @@ public class TesteLayoutTerminal {
             column4 -> column4.header("PREÇO (R$)").with(pair -> String.format("R$%.2f", pair.left().getPreco()))
         );
 
-        TextIO textIO = new TextIO(new SystemTextTerminal());
-        String confirm = textIO.newStringInputReader()
-            .withNumberedPossibleValues("Comprar", "Vender", "Sair")
-            .read("O que você deseja fazer?");
+        int option = BetterInputs.getIntFromEnumeratedValues("Escolha algo", "banana", "goiaba");
 
         //System.out.println("A resposta foi: " + answer);
-        System.out.println(confirm);
+        System.out.println(option);
     }
 
 }

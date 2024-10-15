@@ -33,6 +33,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
     public ProdutoServiceImpl(Connection connection, ChangeManager changeManager) {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
         this.changeManager = changeManager;
+        this.carrinho = new Carrinho();
     }
 
 
