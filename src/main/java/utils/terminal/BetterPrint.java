@@ -1,4 +1,4 @@
-package utils;
+package utils.terminal;
 
 public class BetterPrint {
 

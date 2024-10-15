@@ -8,10 +8,10 @@ import domain.produtos.models.Promocao;
 import infrastructure.notifications.Observer;
 import infrastructure.notifications.Subject;
 import infrastructure.notifications.changemanagers.ChangeManager;
-import utils.BetterIO;
-import utils.BetterPrint;
+import utils.terminal.BetterInputs;
+import utils.terminal.BetterPrint;
 import utils.Pair;
-import utils.TablePrinter;
+import utils.terminal.tabelas.TablePrinter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -111,7 +111,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
 
         printResumoCarrinho(disponiveis, indisponiveis, total);
 
-        boolean prosseguir = BetterIO.getConfirmation("Você deseja prosseguir?", false);
+        boolean prosseguir = BetterInputs.getConfirmation("Você deseja prosseguir?", false);
 
         if (prosseguir) {
             // executa o pagamentoService

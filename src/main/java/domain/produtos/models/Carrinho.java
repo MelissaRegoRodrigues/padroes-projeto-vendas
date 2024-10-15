@@ -13,6 +13,7 @@ public class Carrinho {
 
     public Carrinho() {
         this.produtoQnt = new HashMap<>();
+        this.idProduto = new HashMap<>();
     }
 
 

@@ -1,4 +1,4 @@
-package utils;
+package utils.terminal.tabelas;
 
 import com.github.freva.asciitable.AsciiTable;
 

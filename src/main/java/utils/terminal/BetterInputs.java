@@ -1,9 +1,9 @@
-package utils;
+package utils.terminal;
 
 import org.beryx.textio.TextIO;
 import org.beryx.textio.system.SystemTextTerminal;
 
-public class BetterIO {
+public class BetterInputs {
 
     private static TextIO textIO = new TextIO(new SystemTextTerminal());
 

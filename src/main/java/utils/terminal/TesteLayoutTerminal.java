@@ -1,4 +1,4 @@
-package utils;
+package utils.terminal;
 
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Estoque;
@@ -6,13 +6,14 @@ import domain.produtos.models.Produto;
 import domain.produtos.models.Promocao;
 import org.beryx.textio.TextIO;
 import org.beryx.textio.system.SystemTextTerminal;
+import utils.terminal.tabelas.TablePrinter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-public class Teste {
+public class TesteLayoutTerminal {
 
     public static void main(String[] args) {
         Carrinho carrinho = new Carrinho();
@@ -42,10 +43,12 @@ public class Teste {
         );
 
         TextIO textIO = new TextIO(new SystemTextTerminal());
+        String confirm = textIO.newStringInputReader()
+            .withNumberedPossibleValues("Comprar", "Vender", "Sair")
+            .read("O que você deseja fazer?");
 
-
-
-        System.out.println("A resposta foi: " + answer);
+        //System.out.println("A resposta foi: " + answer);
+        System.out.println(confirm);
     }
 
 }
