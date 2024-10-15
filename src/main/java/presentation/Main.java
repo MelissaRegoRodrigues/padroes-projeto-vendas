@@ -44,7 +44,7 @@ public class Main {
                 "Ver todos os produtos",
                 "Adicionar produto ao carrinho",
                 "Ver carrinho de compras",
-                "Remoer produto do carrinho",
+                "Remover produto do carrinho",
                 "Comprar produtos no carrinho",
                 "Voltar");
 

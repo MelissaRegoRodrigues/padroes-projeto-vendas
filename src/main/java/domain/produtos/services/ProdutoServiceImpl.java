@@ -1,10 +1,8 @@
 package domain.produtos.services;
 
 import domain.produtos.daos.ProdutoDAO;
-import domain.produtos.daos.PromocaoDAO;
 import domain.produtos.models.Carrinho;
 import domain.produtos.models.Produto;
-import domain.produtos.models.Promocao;
 import infrastructure.notifications.Observer;
 import infrastructure.notifications.Subject;
 import infrastructure.notifications.changemanagers.ChangeManager;
@@ -14,25 +12,20 @@ import utils.Pair;
 import utils.terminal.tabelas.TablePrinter;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 
-import static domain.produtos.models.Estoque.DISPONIVEL;
 import static domain.produtos.models.Estoque.INDISPONIVEL;
 
-public class ProdutoServiceImpl implements Subject<Promocao> {
+public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
     private final ProdutoDAO produtoDAO;
 
-    private PromocaoDAO promocaoDAO;
-
-    private Carrinho carrinho;
+    private final Carrinho carrinho;
 
     private final ChangeManager changeManager;
 
     public ProdutoServiceImpl(Connection connection, ChangeManager changeManager) {
         this.produtoDAO = new ProdutoDAO(connection); // Inicializa o DAO com a conexão
-        this.promocaoDAO = new PromocaoDAO(connection);
         this.changeManager = changeManager;
         this.carrinho = new Carrinho();
     }
@@ -45,14 +38,14 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
             column1 -> column1.header("ID").with(produto -> produto.getId().toString()),
             column2 -> column2.header("PRODUTO").with(Produto::getNome),
             column3 -> column3.header("PREÇO (R$)").with(produto -> String.format("R$%.2f", produto.getPreco())),
-            column4 -> column4.header("PROMOCAO").with(produto -> produto.getPromocao().getDesconto()*100 + "%"),
+            column4 -> column4.header("PROMOCAO").with(produto -> produto.getPromocao()*100 + "%"),
             column5 -> column5.header("PREÇO (R$) DESC.").with(produto -> produto.calcularPreco().toString())
         );
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void adicionarProdutoAoCarrinho() {
-        int id = inputProdutoId("Informe o ID do produto que vocÇe deseja adicionar (0 para voltar)");
+        int id = inputProdutoIdDoCarrinho("Informe o ID do produto que vocÇe deseja adicionar (0 para voltar)");
 
         if (id == 0) return;
 
@@ -66,7 +59,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
         System.out.printf("Agora há %d unidades", novaQnt);
     }
 
-    private int inputProdutoId(String prompt) {
+    private int inputProdutoIdDoCarrinho(String prompt) {
         return BetterInputs.prepareIO().newIntInputReader()
             .withValueChecker((value, name) -> {
                 // Retorno nulo significa que não é para lançar erro
@@ -90,7 +83,7 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
             return;
         }
 
-        int id = inputProdutoId("Informe o ID do produto que você deseja remover (0 para voltar):");
+        int id = inputProdutoIdDoCarrinho("Informe o ID do produto que você deseja remover (0 para voltar):");
 
         if (id == 0) return;
 
@@ -184,44 +177,48 @@ public class ProdutoServiceImpl implements Subject<Promocao> {
 
     // TODO colocar lógica de interação para adicionar promoção
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public void addPromocao(Integer idProduto, Promocao promocao) {
+    public void addPromocao() {
+        int idProduto = BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(0)
+            .read("Informe o ID do produto ao qual você deseja aplicar o desconto (0 para voltar)");
 
-            Optional<Promocao> promocaoBuscada = promocaoDAO.buscarPromocaoPorId(promocao.getId());
+        if (idProduto == 0) return;
 
-            if (promocaoBuscada.isPresent()) {
-                promocaoDAO.atualizarPromocao(promocaoBuscada.get());
-            }else {
-                promocaoDAO.adicionarPromocao(promocao, idProduto);
-            }
+        int promocao = BetterInputs.prepareIO().newIntInputReader()
+            .withMinVal(1)
+            .withMaxVal(99)
+            .read("Informe o valor da promoção em formato inteiro no intervalo de 1 a 99: ");
 
-            Produto produtoNoBanco = produtoDAO.buscarPorId(idProduto).get();
+        Optional<Produto> resultado = produtoDAO.buscarPorId(idProduto);
 
-            if (produtoNoBanco != null) {
-                if (produtoNoBanco.getStatus() == DISPONIVEL) {
-                    produtoNoBanco.setPromocao(promocao);
-                } else {
+        if (resultado.isEmpty()) {
+            System.out.printf("Não existe um produto com o ID %d especificado %n", idProduto);
+            return;
+        } else if (resultado.get().getStatus() == INDISPONIVEL) {
+            System.out.printf("O produto %s com ID %d não está disponível no momento",
+                resultado.get().getNome(), resultado.get().getId());
+            return;
+        }
 
-                    System.out.println("Produto INDISPONÍVEL para aplicar a promoção.");
-                }
-            }
-
-
+        resultado.get().setPromocao(promocao);
+        produtoDAO.atualizarProduto(resultado.get());
+        System.out.printf("O desconto de %d foi aplicado ao produto %s !", promocao, resultado.get().getNome());
     }
 
 
     // NOTIFICAÇÕES
     @Override
-    public void anexar(Observer<Promocao> observer) {
+    public void anexar(Observer<PromocaoInfo> observer) {
         changeManager.adicionarObserver(this, observer);
     }
 
     @Override
-    public void desanexar(Observer<Promocao> observer) {
+    public void desanexar(Observer<PromocaoInfo> observer) {
         changeManager.removerObserver(this, observer);
     }
 
     @Override
-    public void notificar(Promocao dados) {
+    public void notificar(PromocaoInfo dados) {
         changeManager.notificar(this, dados);
     }
 

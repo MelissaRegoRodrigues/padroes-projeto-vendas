@@ -8,10 +8,9 @@ public class Produto {
     private String nome;
     private int quantidade;
     private BigDecimal preco;
-    private Promocao promocao;
+    private int promocao;
 
-    public Produto (Integer id, String nome, int quantidade, BigDecimal preco,
-                    Promocao promocao) {
+    public Produto (Integer id, String nome, int quantidade, BigDecimal preco, int promocao) {
         this.id = id;
         this.nome = nome;
         this.quantidade = quantidade;
@@ -24,20 +23,15 @@ public class Produto {
         this.nome = nome;
         this.quantidade = quantidade;
         this.preco = preco;
-        this.promocao = Promocao.SEM_PROMOCAO;
+        this.promocao = 0;
     }
 
 
-
     public BigDecimal calcularPreco() {
-        if (promocao.validar()){
-            BigDecimal precoOrigem = this.preco;
-            BigDecimal valorDesconto = precoOrigem.multiply(BigDecimal.valueOf(promocao.getDesconto()/100));
-            BigDecimal precoNovo = precoOrigem.subtract(valorDesconto);
-            return precoNovo;
-        }else {
-            return preco;
+        if (promocao != 0) {
+            return preco.multiply(BigDecimal.valueOf(1 - (promocao/100)));
         }
+        return preco;
     }
 
 
@@ -73,11 +67,11 @@ public class Produto {
         this.preco = preco;
     }
 
-    public Promocao getPromocao() {
+    public int getPromocao() {
         return promocao;
     }
 
-    public void setPromocao(Promocao promocao) {
+    public void setPromocao(int promocao) {
         this.promocao = promocao;
     }
 
