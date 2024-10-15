@@ -20,7 +20,7 @@ public class Main {
     public static void main(String[] args) {
         SQLiteDBConnection.createDatabase();
 
-        BetterPrint.printWithBorder("Seja bem-vindo à nossa loja!", "=");
+        BetterPrint.printWithBorder(" Seja bem-vindo à nossa loja! ", "=");
 
         boolean continuar = true;
         do {
@@ -30,7 +30,7 @@ public class Main {
                 case 1 -> mostrarMenuCliente();
                 case 2 -> System.out.println("Menu do Administrador (a ser implementado)...");
                 case 3 -> {
-                    System.out.println("Saindo do sistema...");
+                    System.out.println(" Saindo do sistema...");
                     continuar = false;
                 }
             }
@@ -41,7 +41,7 @@ public class Main {
         boolean continuar = true;
 
         do {
-            int opcao = BetterInputs.getIntFromEnumeratedValues("Menu do Cliente: ",
+            int opcao = BetterInputs.getIntFromEnumeratedValues(" Menu do Cliente: ",
                 "Ver todos os produtos",
                 "Adicionar produto ao carrinho",
                 "Ver carrinho de compras",
