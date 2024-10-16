@@ -1,14 +1,8 @@
 package domain.pagamentos.services;
 
 import domain.pagamentos.models.Pagamento;
-import domain.pagamentos.services.strategies.ContextoEstrategiaPagamento;
-import domain.pagamentos.services.strategies.EstrategiaPagamentoCartaoCredito;
-import domain.pagamentos.services.strategies.EstrategiaPagamentoCartaoDebito;
-import domain.pagamentos.services.strategies.EstrategiaPagamentoPix;
-import domain.pagamentos.validators.PagamentoCartaoCreditoHandler;
-import domain.pagamentos.validators.PagamentoCartaoDebitoHandler;
-import domain.pagamentos.validators.PagamentoHandler;
-import domain.pagamentos.validators.PagamentoPixHandler;
+import domain.pagamentos.services.strategies.*;
+import domain.pagamentos.validators.*;
 import infrastructure.apis.banco.BancoBrasilAPI;
 
 import java.math.BigDecimal;
@@ -18,7 +12,8 @@ public class PagamentoServiceImpl implements PagamentoService {
     private final PagamentoHandler handlers = PagamentoHandler.encadear(
             new PagamentoCartaoCreditoHandler(new BancoBrasilAPI()),
             new PagamentoCartaoDebitoHandler(new BancoBrasilAPI()),
-            new PagamentoPixHandler(new BancoBrasilAPI()));
+            new PagamentoPixHandler(new BancoBrasilAPI()),
+            new PagamentoBoletoHandler(new BancoBrasilAPI()));
 
     private final Scanner sc = new Scanner(System.in);
 
@@ -28,6 +23,7 @@ public class PagamentoServiceImpl implements PagamentoService {
         System.out.println("1 - Cartão de Crédito");
         System.out.println("2 - Cartão de Débito");
         System.out.println("3 - Pix");
+        System.out.println("4 - Boleto");
 
         String opcaoPagamento = sc.nextLine().trim();
         ContextoEstrategiaPagamento estrategiaPagamento = new ContextoEstrategiaPagamento();
@@ -48,9 +44,18 @@ public class PagamentoServiceImpl implements PagamentoService {
                 estrategiaPagamento.setEstrategiaPagamento(new EstrategiaPagamentoPix());
                 estrategiaPagamento.executarEstrategiaPagamento(pagamento);
                 break;
+            case "4":
+                estrategiaPagamento.setEstrategiaPagamento(new EstrategiaPagamentoBoleto());
+                estrategiaPagamento.executarEstrategiaPagamento(pagamento);
+                break;
             default:
                 System.out.println("Método inválido");
         }
-        handlers.processar(pagamento);
+        try {
+            handlers.processar(pagamento);
+        } catch (RuntimeException e){
+            System.out.println(e.getMessage());
+        }
+
     }
 }
