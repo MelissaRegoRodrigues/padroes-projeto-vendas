@@ -19,7 +19,7 @@ public class PagamentoServiceImpl implements PagamentoService {
     private final Scanner sc = new Scanner(System.in);
 
     @Override
-    public void pagar(BigDecimal valor) {
+    public boolean pagar(BigDecimal valor) {
 
         ContextoEstrategiaPagamento estrategiaPagamento = new ContextoEstrategiaPagamento();
         Pagamento pagamento = new Pagamento(valor);
@@ -40,7 +40,9 @@ public class PagamentoServiceImpl implements PagamentoService {
             handlers.processar(pagamento);
         } catch (RuntimeException e){
             System.out.println(e.getMessage());
+            return false;
         }
 
+        return true;
     }
 }
