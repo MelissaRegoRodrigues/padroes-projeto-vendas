@@ -4,7 +4,9 @@ import domain.pagamentos.services.PagamentoServiceImpl;
 import domain.produtos.services.ProdutoServiceImpl;
 import infrastructure.database.SQLiteDBConnection;
 import infrastructure.notifications.changemanagers.ScheduledChangeManager;
+import infrastructure.notifications.impl.ObserverCompra;
 import infrastructure.notifications.impl.PromocaoObserver;
+import infrastructure.notifications.changemanagers.SimpleChangeManager;
 import utils.terminal.BetterInputs;
 import utils.terminal.BetterPrint;
 
@@ -17,12 +19,13 @@ public class Main {
     private static ProdutoServiceImpl produtoService;
 
     public static void init(){
-        pagamentoService = new PagamentoServiceImpl();
+        pagamentoService = new PagamentoServiceImpl(new SimpleChangeManager());
         ScheduledChangeManager scm = new ScheduledChangeManager(Executors.newScheduledThreadPool(1),
                 Executors.newFixedThreadPool(5));
         scm.iniciar(15L, 15L, TimeUnit.SECONDS);
-        produtoService = new ProdutoServiceImpl(SQLiteDBConnection.getConnection(), scm, new PagamentoServiceImpl());
+        produtoService = new ProdutoServiceImpl(SQLiteDBConnection.getConnection(), scm, pagamentoService);
         produtoService.anexar(new PromocaoObserver());
+        pagamentoService.anexar(new ObserverCompra());
         SQLiteDBConnection.createDatabase();
     }
 
