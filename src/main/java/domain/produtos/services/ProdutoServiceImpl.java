@@ -41,9 +41,10 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         TablePrinter.printTable(produtos,
             column1 -> column1.header("ID").with(produto -> produto.getId().toString()),
             column2 -> column2.header("PRODUTO").with(Produto::getNome),
-            column3 -> column3.header("PREÇO (R$)").with(produto -> String.format("%.2f", produto.getPreco())),
-            column4 -> column4.header("PROMOCAO").with(produto -> produto.getPromocao() + "%"),
-            column5 -> column5.header("PREÇO (R$) DESC.").with(produto -> "%.2f".formatted(produto.calcularPreco()))
+            column3 -> column3.header("QTD. ESTOQUE").with(produto -> String.valueOf(produto.getQuantidade())),
+            column4 -> column4.header("PREÇO (R$)").with(produto -> String.format("%.2f", produto.getPreco())),
+            column5 -> column5.header("PROMOÇÃO").with(produto -> produto.getPromocao() + "%"),
+            column6 -> column6.header("PREÇO (R$) DESC.").with(produto -> "%.2f".formatted(produto.calcularPreco()))
         );
     }
 
@@ -60,7 +61,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
             System.out.printf("Não há um produto com o ID %d especificado %n", id);
             return;
         } else if (resultado.get().getStatus() == INDISPONIVEL){
-            System.out.printf("O produto de ID %d está indisponível", id);
+            System.out.printf("O produto de ID %d está indisponível %n", id);
             return;
         }
 
@@ -69,9 +70,9 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         int qnt = inputUnidades("Quantas unidades do produto %s você deseja adicionar?"
                   .formatted(produto.getNome()));
 
-        int novaQnt = carrinho.adicionarProduto(produto, qnt);
+        int novaQnt = carrinho.adicionarProduto(produto, Math.min(qnt, produto.getQuantidade()));
         System.out.printf("%d unidades do produto %s foram adicionadas ao carrinho %n", qnt, produto.getNome());
-        System.out.printf("Agora há %d unidades", novaQnt);
+        System.out.printf("Agora há %d unidades %n", novaQnt);
     }
 
     private int inputProdutoIdDoCarrinho(String prompt) {
@@ -118,44 +119,25 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
             return;
         }
 
-        List<Pair<Produto, Integer>> disponiveis = new ArrayList<>();
-        List<Produto> indisponiveis = new ArrayList<>();
-
-        for (Pair<Produto, Integer> pair : carrinho.getProdutoQnt()) {
-            Optional<Produto> produto = produtoDAO.buscarPorId(pair.left().getId());
-
-            if (produto.isEmpty() || produto.get().getStatus() == INDISPONIVEL) {
-                indisponiveis.add(pair.left());
-                continue;
-            }
-
-            disponiveis.add(pair);
-        }
-
         BigDecimal total = carrinho.calcularPreco();
-        printResumoCarrinho(disponiveis, indisponiveis, total);
+        printResumoCarrinho(carrinho.getProdutoQnt(), total);
 
         boolean prosseguir = BetterInputs.getConfirmation("Você deseja prosseguir?", false);
 
         if (prosseguir) {
-            pagamentoService.pagar(total);
-            atualizarEstoque(carrinho.getProdutoQnt());
-            return;
+            boolean sucesso = pagamentoService.pagar(total);
+            if (sucesso) {
+                atualizarEstoque(carrinho.getProdutoQnt());
+                return;
+            }
         }
 
         System.out.println("Não foi possível finalizar sua compra.");
     }
 
-    private void printResumoCarrinho(List<Pair<Produto, Integer>> disponiveis, List<Produto> indisponiveis,
-                                     BigDecimal total) {
+    private void printResumoCarrinho(List<Pair<Produto, Integer>> produtoQtd, BigDecimal total) {
         BetterPrint.printWithBorder("RESUMO DA COMPRA", "=");
-        BetterPrint.printWithBorder("Disponíveis", "=");
-        printProdutosEQuantidade(disponiveis);
-        BetterPrint.printWithBorder("Indisponíveis", "=");
-        TablePrinter.printTable(indisponiveis,
-            column1 -> column1.header("ID").with(produto -> produto.getId().toString()),
-            column2 -> column2.header("PRODUTO").with(Produto::getNome)
-        );
+        printProdutosEQuantidade(produtoQtd);
         System.out.printf("TOTAL: %.2f %n", total);
     }
 
@@ -168,6 +150,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
             produto.setQuantidade(produto.getQuantidade() - qtd);
             produtoDAO.atualizarProduto(produto);
         }
+        carrinho.esvazear();
     }
 
     private void printProdutosEQuantidade(List<Pair<Produto, Integer>> pairs) {
@@ -203,7 +186,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
             System.out.printf("Não existe um produto com o ID %d especificado %n", idProduto);
             return;
         } else if (resultado.get().getStatus() == INDISPONIVEL) {
-            System.out.printf("O produto %s com ID %d não está disponível no momento",
+            System.out.printf("O produto %s com ID %d não está disponível no momento %n",
                 resultado.get().getNome(), resultado.get().getId());
             return;
         }
@@ -215,8 +198,8 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
 
         resultado.get().setPromocao(promocao);
         produtoDAO.atualizarProduto(resultado.get());
-        System.out.printf("O desconto de %d foi aplicado ao produto %s !", promocao, resultado.get().getNome());
-        notificar(new PromocaoInfo(resultado.get().getNome(),promocao,resultado.get().getPreco()));
+        System.out.printf("O desconto de %d foi aplicado ao produto %s! %n", promocao, resultado.get().getNome());
+        notificar(new PromocaoInfo(resultado.get().getNome(), promocao, resultado.get().getPreco()));
     }
 
 

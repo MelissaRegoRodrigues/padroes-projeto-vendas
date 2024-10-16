@@ -29,7 +29,7 @@ public class Produto {
 
     public BigDecimal calcularPreco() {
         if (promocao != 0) {
-            return preco.multiply(BigDecimal.valueOf(1 - (promocao/100)));
+            return preco.multiply(BigDecimal.valueOf(1 - (promocao/100.00)));
         }
         return preco;
     }
