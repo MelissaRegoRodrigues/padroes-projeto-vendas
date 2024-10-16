@@ -1,4 +1,6 @@
 package infrastructure.notifications.impl;
 
-public record CompraInfo(String nome, double preco) {
+import java.math.BigDecimal;
+
+public record CompraInfo(String nomeProduto, BigDecimal preco) {
 }
