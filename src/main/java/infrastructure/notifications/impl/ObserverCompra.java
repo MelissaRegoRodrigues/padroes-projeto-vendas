@@ -6,7 +6,7 @@ public class ObserverCompra implements Observer<CompraInfo> {
 
     @Override
     public void operar(CompraInfo dados) {
-        System.out.println("NOTIFICAÇÃO: Você acabou de realizar uma compra de um produto por R$ " + dados.preco());
+        System.out.printf("%nNOTIFICAÇÃO: Você acabou de realizar uma compra de um produto por R$ %.2f %n", dados.preco());
     }
 
 }

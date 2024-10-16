@@ -4,6 +4,7 @@ import domain.pagamentos.services.PagamentoServiceImpl;
 import domain.produtos.services.ProdutoServiceImpl;
 import infrastructure.database.SQLiteDBConnection;
 import infrastructure.notifications.changemanagers.ScheduledChangeManager;
+import infrastructure.notifications.impl.ObserverCompra;
 import infrastructure.notifications.impl.PromocaoObserver;
 import infrastructure.notifications.changemanagers.SimpleChangeManager;
 import utils.terminal.BetterInputs;
@@ -24,6 +25,7 @@ public class Main {
         scm.iniciar(15L, 15L, TimeUnit.SECONDS);
         produtoService = new ProdutoServiceImpl(SQLiteDBConnection.getConnection(), scm, pagamentoService);
         produtoService.anexar(new PromocaoObserver());
+        pagamentoService.anexar(new ObserverCompra());
         SQLiteDBConnection.createDatabase();
     }
 
