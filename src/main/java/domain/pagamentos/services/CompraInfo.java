@@ -1,4 +1,4 @@
-package infrastructure.notifications.impl;
+package domain.pagamentos.services;
 
 import java.math.BigDecimal;
 

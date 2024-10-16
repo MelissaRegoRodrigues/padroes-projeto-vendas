@@ -7,7 +7,6 @@ import infrastructure.apis.banco.BancoBrasilAPI;
 import infrastructure.notifications.Observer;
 import infrastructure.notifications.Subject;
 import infrastructure.notifications.changemanagers.ChangeManager;
-import infrastructure.notifications.impl.CompraInfo;
 import utils.terminal.BetterInputs;
 
 import java.math.BigDecimal;

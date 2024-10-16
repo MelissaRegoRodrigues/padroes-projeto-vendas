@@ -1,6 +1,5 @@
-package infrastructure.notifications.impl;
+package domain.produtos.services;
 
-import domain.produtos.services.PromocaoInfo;
 import infrastructure.notifications.Observer;
 
 public class PromocaoObserver implements Observer<PromocaoInfo> {
