@@ -216,6 +216,7 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         resultado.get().setPromocao(promocao);
         produtoDAO.atualizarProduto(resultado.get());
         System.out.printf("O desconto de %d foi aplicado ao produto %s !", promocao, resultado.get().getNome());
+        notificar(new PromocaoInfo(resultado.get().getNome(),promocao,resultado.get().getPreco()));
     }
 
 
