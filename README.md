@@ -1,4 +1,4 @@
-# Aplicação de Vendas - Padrões de Projeto com Java + JSP + Servlets
+# Aplicação de Vendas - Padrões de Projeto com Java 
 
-Este projeto é uma aplicação web de vendas desenvolvida em Java utilizando JSP (Java Server Pages), Servlets, e Padrões de Projeto. A aplicação simula um sistema de vendas com funcionalidades como cadastro de produtos, gerenciamento de usuários e fluxo de compras, implementando diversos padrões de design.
+O projeto é uma aplicação de vendas desenvolvida em Java utilizando JDBC. A aplicação simula um sistema de vendas com funcionalidades como cadastro de produtos, promoções e fluxo de compras, implementando 4 padrões de projeto.
 
