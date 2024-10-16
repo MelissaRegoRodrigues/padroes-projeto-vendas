@@ -125,13 +125,11 @@ public class ProdutoServiceImpl implements Subject<PromocaoInfo> {
         boolean prosseguir = BetterInputs.getConfirmation("Você deseja prosseguir?", false);
 
         if (prosseguir) {
-            try {
-                pagamentoService.pagar(total);
+            boolean sucesso = pagamentoService.pagar(total);
+            if (sucesso) {
                 atualizarEstoque(carrinho.getProdutoQnt());
-            } catch (RuntimeException e) {
-                System.out.println("Não foi possível finalizar sua compra");
+                return;
             }
-            return;
         }
 
         System.out.println("Não foi possível finalizar sua compra.");
