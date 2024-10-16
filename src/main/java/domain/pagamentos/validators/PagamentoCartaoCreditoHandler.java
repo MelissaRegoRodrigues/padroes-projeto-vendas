@@ -20,7 +20,7 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
         if (pagamento.getDadosPagamento() instanceof DadosCartaoCredito) {
             validarDadosBasicos(pagamento);
             System.out.println();
-            System.out.printf("Parcelas serão de R$ %.2f", calcularParcelas(pagamento));
+            System.out.printf("Parcelas serão de R$ %.2f %n", calcularParcelas(pagamento));
             System.out.println("Processando o pagamento com cartão de crédito no valor de " + pagamento.getValor() + " reais...");
             System.out.println();
 
@@ -60,7 +60,7 @@ public class PagamentoCartaoCreditoHandler extends PagamentoHandler {
         if (!cartao.getCodigoSeguranca().matches("\\d{3}")) {
             throw new RuntimeException("Código de segurança inválido!");
         }
-        if (cartao.getQuantidadeParcelas() < 0) {
+        if (cartao.getQuantidadeParcelas() <= 0) {
             throw new RuntimeException("Quantidade de parcelas deve ser maior que zero!");
         }
 

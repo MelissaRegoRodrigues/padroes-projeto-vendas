@@ -16,7 +16,9 @@ public class PagamentoCartaoDebitoHandler extends PagamentoHandler {
     @Override
     public boolean processar(Pagamento pagamento) {
        if (pagamento.getDadosPagamento() instanceof DadosCartaoDebito) {
+           validarDadosBasicos(pagamento);
            System.out.println();
+           System.out.printf("Valor total será de R$ %.2f %n", pagamento.getValor());
            System.out.println("Processando o pagamento com cartão de débito no valor de " + pagamento.getValor() + " reais.");
            return true;
         }
