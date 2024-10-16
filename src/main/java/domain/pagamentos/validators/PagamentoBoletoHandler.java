@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 public class PagamentoBoletoHandler extends PagamentoHandler {
 
-    protected PagamentoBoletoHandler(BancoAPI bancoAPI) {
+    public PagamentoBoletoHandler(BancoAPI bancoAPI) {
         super(bancoAPI);
     }
 

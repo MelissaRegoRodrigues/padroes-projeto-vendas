@@ -22,7 +22,7 @@ public class EstrategiaPagamentoCartaoCredito implements EstrategiaPagamento {
         System.out.println("Quantidade de parcelas (mínimo 1): ");
         dados.setQuantidadeParcelas(scanner.nextInt());
         pagamento.setDadosPagamento(dados);
-        System.out.printf("Parcelas serão de R$ %.2f", calcularParcelas(pagamento));
+
     }
 
     private BigDecimal calcularParcelas(Pagamento pagamento){
