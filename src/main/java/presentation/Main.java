@@ -8,19 +8,29 @@ import utils.terminal.BetterInputs;
 import utils.terminal.BetterPrint;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    private static final PagamentoServiceImpl pagamentoService = new PagamentoServiceImpl();
-    private static final ProdutoServiceImpl produtoService = new ProdutoServiceImpl(
-        SQLiteDBConnection.getConnection(),
-        new ScheduledChangeManager(Executors.newScheduledThreadPool(1), Executors.newFixedThreadPool(5)),
-        new PagamentoServiceImpl());
+    private static PagamentoServiceImpl pagamentoService;
+    private static ProdutoServiceImpl produtoService;
+
+    public static void init(){
+        pagamentoService = new PagamentoServiceImpl();
+        ScheduledChangeManager scm = new ScheduledChangeManager(Executors.newScheduledThreadPool(1),
+                Executors.newFixedThreadPool(5));
+        scm.iniciar(8L,8L, TimeUnit.SECONDS);
+        produtoService = new ProdutoServiceImpl(SQLiteDBConnection.getConnection(), scm, new PagamentoServiceImpl());
+
+    }
 
     public static void main(String[] args) {
+
+        init();
+
         SQLiteDBConnection.createDatabase();
 
-        BetterPrint.printWithBorder("Seja bem-vindo à nossa loja!", "=");
+        BetterPrint.printWithBorder(" Seja bem-vindo à nossa loja! ", "=");
 
         boolean continuar = true;
         do {
@@ -28,20 +38,21 @@ public class Main {
 
             switch (opcao) {
                 case 1 -> mostrarMenuCliente();
-                case 2 -> System.out.println("Menu do Administrador (a ser implementado)...");
+                case 2 -> mostrarMenuAdmin();
                 case 3 -> {
-                    System.out.println("Saindo do sistema...");
+                    System.out.println("Saindo do Sistema...");
                     continuar = false;
                 }
             }
         } while (continuar);
+
     }
 
     private static void mostrarMenuCliente() {
         boolean continuar = true;
 
         do {
-            int opcao = BetterInputs.getIntFromEnumeratedValues("Menu do Cliente: ",
+            int opcao = BetterInputs.getIntFromEnumeratedValues(" Menu do Cliente: ",
                 "Ver todos os produtos",
                 "Adicionar produto ao carrinho",
                 "Ver carrinho de compras",
@@ -58,6 +69,21 @@ public class Main {
                 case 6 -> continuar = false;
             }
         } while (continuar);
+    }
+
+    private static void mostrarMenuAdmin(){
+        boolean continuar = true;
+
+        do{
+            int opcao = BetterInputs.getIntFromEnumeratedValues(" Menu do Administrador: ",
+                    "Ver todos os produtos","Adicionar promoção", "Voltar");
+            switch (opcao){
+                case 1 -> verTodosProdutos();
+                case 2 -> adicionarPromocao();
+                case 3 -> continuar = false;
+            }
+        }while (continuar);
+
     }
 
     private static void verTodosProdutos() {
@@ -78,6 +104,10 @@ public class Main {
 
     private static void comprarProdutos() {
         produtoService.finalizarCompra();
+    }
+
+    private static void adicionarPromocao(){
+        produtoService.addPromocao();
     }
 
 }
